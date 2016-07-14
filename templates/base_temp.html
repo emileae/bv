@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% block fb_share %}
+    <meta property="og:url" content="http://bucketvision.com"/>
+    <meta property="og:title"           content="Bucket Vision" /> 
+    <meta property="og:description" content="Join Bucket Vision, a place to share your Visions and Victories" />
+    <meta property="og:type"            content="bucket_vision:website" /> 
+    <meta property="og:image" content="http://bucketvision.com/static/images/bucketvision_title_white.png"/>
+    {% endblock %}
+
+    <title>Bucket Vision</title>
+    
+    <!-- If you are using CSS version, only link these 2 files, you may add app.css to use for your overrides if you like. -->
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/foundation/foundation.min.css">
+    <link rel="stylesheet" href="/static/css/nprogress.css">
+    
+    <link href='//fonts.googleapis.com/css?family=Roboto:400,300italic,700italic,700' rel='stylesheet' type='text/css'>
+    
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style-linecons.css">
+
+    <!-- Foundicons -->
+    <link href='/static/css/foundation-icons.css' rel='stylesheet' type='text/css'>
+    <!-- Icomoon -->
+    <link href='/static/fonts/style_icomoon.css' rel='stylesheet' type='text/css'>
+
+    <script src="/static/foundation/custom.modernizr.js"></script>
+    
+    <style type="text/css">
+
+    </style>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>-->
+    <script src="/static/foundation/foundation.min.js"></script>
+    <script src="/static/js/jquery.dotdotdot.min.js"></script>
+    <script src="/static/js/masonry-min.js"></script>
+    <script src="/static/js/imagesLoaded-min.js"></script>
+    <script src="/static/js/nprogress.js"></script>
+    <!--<script src="/static/js/page_script.js"></script>-->
+    <script src="/static/js/page_script_min.js"></script>
+    
+  </head>
+  <body>
+    
+    
+    
+    <div id="main_content">
+        <!--{ if feed_selected }-->
+            <div id="bv_feed_banner">
+                {% if not user_obj %}
+                    <!--<a href="/login"><div class="black_btn">Login</div></a>
+                    <a href="/signup"><div class="black_btn">Signup</div></a>-->
+                {% endif %}
+            </div>
+        <!--{ endif }-->
+        <div id="nav_container" class="sticky">
+            <!--<nav class="top-bar" data-topbar data-options="sticky_on: large">-->
+            <nav class="top-bar" data-topbar>
+              <ul id="title_area" class="title-area">
+                <li class="name">
+                  <h1><a href="/"><img src="/static/images/logo_horizontal.png"/></a></h1>
+                </li>
+                <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+              </ul>
+
+              <section class="top-bar-section">
+                <!-- Right Nav Section -->
+                <ul class="center">
+                    {% if user_obj %}
+                    <li class="nav_li {% if explore_selected %}nav_selected{% endif %} text-center"><a href="/">Inspiration</a></li>
+                    <li class="nav_li {% if feed_selected %}nav_selected{% endif %} text-center"><a href="/feed">Feed</a></li>
+                    <li class="nav_li {% if vision_selected %}nav_selected{% endif %} text-center"><a class="" href="/goals">My Goals</a></li>
+                    <li class="nav_li {% if victory_selected %}nav_selected{% endif %} text-center"><a class="" href="/victories">My Victories</a></li>
+                    {% else %}
+                    
+                    <li class="nav_li {% if explore_selected %}nav_selected{% endif %} text-center"><a href="/">Inspiration</a></li>
+                    <li class="nav_li text-center"><a href="/login">Login</a></li>
+                    <li class="nav_li text-center"><a href="/register">Register</a></li>
+                    {% endif %}
+                </ul>
+
+                <!-- Left Nav Section -->
+                <ul class="right">
+                    <li>
+
+                            <a href="https://www.facebook.com/pages/Bucketvision/593138557433087" class="soc_share soc_share_nav no_margin" target="_blank">
+                                <svg version="1.1"
+                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                     x="0px" y="0px" width="320px" height="320px" viewBox="0 0 320 320" enable-background="new 0 0 320 320" xml:space="preserve">
+                                <defs>
+                                </defs>
+                                <path d="M160,0C71.5,0,0,71.5,0,160s71.5,160,160,160s160-71.5,160-160S248.5,0,160,0z M160,300c-77,0-140-63-140-140S83,20,160,20
+                                    s140,63,140,140S237,300,160,300z"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M137.5,242.5l0-80l-20,0l0-30l20,0c0-51.5,2.2-55,65-55l0,30c-33.1,0-30,1.8-30,25
+                                    l30,0l0,30l-30,0l0,80L137.5,242.5z"/>
+                                </svg>
+                            </a>
+
+                    </li>
+                    <li>
+
+                            <a href="https://twitter.com/bucketvision" class="soc_share soc_share_nav no_margin" target="_blank">
+                                <svg version="1.1"
+                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                     x="0px" y="0px" width="320px" height="320px" viewBox="0 0 320 320" enable-background="new 0 0 320 320" xml:space="preserve">
+                                <defs>
+                                </defs>
+                                <path d="M160,0C71.5,0,0,71.5,0,160s71.5,160,160,160s160-71.5,160-160S248.5,0,160,0z M160,300c-77,0-140-63-140-140S83,20,160,20
+                                    s140,63,140,140S237,300,160,300z"/>
+                                <path d="M195,167.5h-50v15c0,5.5,4.5,10,10,10h40c11,0,20,9,20,20s-9,20-20,20h-50c-22,0-40-18-40-40v-85c0-11,9-20,20-20
+                                    s20,9,20,20v20h50c11,0,20,9,20,20S206,167.5,195,167.5z"/>
+                                </svg>
+                            </a>
+
+                    </li>
+                    {% if user_obj %}
+                    <li id="status_img_container" class="text-center">
+                        <a id="status_img" href="#" data-reveal-id="pointsModal">
+                            {{user_obj.total_points}}
+                        </a>
+                    </li>
+                    <li class="has-dropdown">
+                        <a id="me_img" href="#" {% if user_obj.profile_img %}style="background-image: url('{{user_obj.profile_img}}')"{% endif %}>
+                            <img id="down_arrow_nav" src="/static/images/arrow-down.svg" />
+                        </a>
+                        <ul id="profile_dropdown" class="dropdown">
+                          <li class="profile_dropdown_element border-bottom border-top border-right border-left"><a href="/settings">Settings</a></li>
+                          <li class="profile_dropdown_element border-bottom border-right border-left"><a href="/how_it_works">How it works</a></li>
+                          <li class="profile_dropdown_element border-bottom border-right border-left"><a href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+              </section>
+            </nav>
+        </div>
+        
+        {% block goal_page %}
+        {% endblock %}
+        
+        {% block main %}
+        <div class="row">
+            <div id="goal_container_front" class="large-12 columns">
+                <div id="goal_list" class="page_goals" data-user-id="no">
+                    {% for g in goals %}
+                        {% include "g_goals.html" %}
+                    {% endfor %}
+                    {% if next %}
+                        <div id="next_curs" data-cursor="{{next}}" class="hidden"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+        
+    </div>
+    
+    {% block bottom_band %}
+    {% endblock %}
+    
+    <!-- Modals -->
+    
+    {% block modal %}
+    {% endblock %}
+    
+    <div id="userModal" class="reveal-modal" data-reveal>
+        <div id="user_profile_container">
+            <p>Loading</p>
+        </div>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <div id="feedModal" class="reveal-modal" data-reveal>
+        <div id="goal_profile_container">
+            <p>Loading</p>
+        </div>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <div id="cardModal" class="reveal-modal" data-reveal>
+        <div id="user_profile_container">
+            <p>Loading</p>
+        </div>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <div id="stealModal" class="reveal-modal" data-reveal>
+        <p>Do you want to steal <span id="victim_goal_name"></span>'s goal?</p>
+        <form method="post" action="/steal_goal">
+            <input type="hidden" id="steal_goal" name="steal_goal" value="" />
+            <input type="submit" value="Yes" class="black_btn" />
+        </form>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+    <div id="stealVictoryModal" class="reveal-modal" data-reveal>
+        <p>Do you want to steal <span id="victim_victory_name"></span>'s victory?</p>
+        <form method="post" action="/steal_victory">
+            <input type="hidden" id="steal_victory" name="steal_goal" value="" />
+            <input type="submit" value="Yes" class="black_btn" />
+        </form>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <div id="deleteAccountModal" class="reveal-modal" data-reveal>
+        <p>Are you sure you want to delete your account?</p>
+        <p>You will lose all your goals and victories, you cannot undo this action.</p>
+        <!--<div id="delete_acc" class="black_btn">Yes I'm sure</div>-->
+        <form id="delete_account_form" action="/delete_account" method="post">
+            <input type="submit" value="Yes, I'm sure" class="black_btn" />
+        </form>
+        <div id="delete_abort" class="black_btn">No</div>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <div id="victoryModal" class="reveal-modal" data-reveal>
+        <h2>Congratulations</h2>
+        <p class="lead">You've achieved one of your goals</p>
+        <p>Don't forget to add more images and videos to your victory</p>
+        <div>
+            <dl class="tabs tabs_3" data-tab>
+              <!-- <dd class="active"><a href="#panel-img_url">Image Url</a></dd> -->
+              <dd><a href="#panel-img_upload">Upload</a></dd>
+              <dd><a href="#panel-video_embed">Video</a></dd>
+            </dl>
+            <div class="tabs-content">
+              <!-- <div class="content active transition" id="panel-img_url">
+                <form id="vic_img_url_form" method="post" action="/add_vic_img_url">
+                    <input id="vic_img_url" name="vic_img_url" type="text" placeholder="paste image url here." />
+                    <input type="hidden" id="vic_img_url_goal_id" name="vic_img_url_goal_id" value="" />
+                    <input type="submit" value="Save" class="button orange tiny no_margin_left" />
+                </form>
+              </div> -->
+              <div class="content active" id="panel-img_upload">
+                <form id="victory_img_upload_form" action="" method="post" enctype="multipart/form-data">
+                    <label>Upload your Victory image (max size 3MB)</label>
+                    <input type="file" id="vic_img" name="vic_img" accept="image/*" />
+                    {% if user_obj %}
+                        <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
+                    {% endif %}
+                    <input type="hidden" id="vic_congrats_goal_id" name="goal_id" value="" />
+                    
+                    <div id="victory_img_submit" class="button tiny">Upload</div>
+                </form>
+              </div>
+              <div class="content" id="panel-video_embed">
+                <form id="goal_submit_video_embed_form" method="post" action="/add_vic_vid">
+                    <input id="goal_video_embed" name="goal_video_embed" type="text" placeholder="paste youtube video url here." />
+                    <input type="hidden" id="vid_goal_id" name="vid_goal_id" value="" />
+                    
+                    <input type="submit" value="Save" class="button tiny" />
+                </form>
+              </div>
+            </div>
+        </div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <div id="pointsModal" class="reveal-modal" data-reveal>
+            <div class="bv_panel no_margin pad_hiw_txt expand">
+                <div class="hiw_title">How to earn points</div>
+                <hr class="thick_hr" />
+                <div class="hiw_description text-center">
+                    Add a goal - 1 point<br />
+                    Add a victory - 5 points<br />
+                    Share on Facebook or Twitter - 1 point
+                    <hr>
+                    Beginner status - 0 to 100 points<br />
+                    Silver status - 100 to 1000 points<br />
+                    Gold status - over 1000 points<br />
+                </div>
+            </div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <!-- FACEBOOK SDK -->
+    <div id="fb-root"></div>
+    <!--<div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&appId=1400072833599823&version=v2.0";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>-->
+    
+    <!--<script src="/static/js/jquery.js"></script>-->
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script src="/static/foundation/foundation.min.js"></script>
+    <script src="/static/js/jquery.dotdotdot.min.js"></script>
+    <script src="/static/js/masonry-min.js"></script>
+    <script src="/static/js/imagesLoaded-min.js"></script>
+    <script src="/static/js/nprogress.js"></script>
+    <script src="/static/js/page_script.js"></script>-->
+    <!--<script src="/static/js/page_script_min.js"></script>-->
+    <script src="/static/js/page_script.js"></script>
+    
+    {% block script %}
+    {% endblock %}
+
+    <script type="text/javascript">
+        $("body").on("click", ".admin_delete", function(){
+            var goal_id = $(this).data("id");
+
+            function success(data){
+                console.log(data);
+                $("#goal_row_"+goal_id).remove();
+            };
+
+            $.ajax({
+                url: "/admin_delete",
+                type: "post",
+                data: {"goal_id": goal_id},
+                success: success
+            }).fail(function(){
+                alert("ajax failed")
+            });
+        });
+    </script>
+    
+    <script type="text/javascript">
+        $(document).foundation();
+    </script>
+    
+    <script type="text/javascript">
+    </script>
+    
+  </body>
+</html>

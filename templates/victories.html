@@ -1,0 +1,143 @@
+{% extends "base_temp.html" %}
+{% block main %}
+    <div class="row">
+        <div class="large-12 medium-12 small-12 columns text-center pad_20px">
+            <span class="span_h1">My Victories</span>
+            <span id="goal_form_toggle" class="icon-plus goal_form_toggle_on toggle_btn_orange"></span>
+            <span id="victory_view_toggle" class="icon-list victory_view_toggle_on toggle_btn_grey"></span>
+            
+        </div>
+    </div>
+    <!-- Add Victory form -->
+    <div class="row">
+        <div id="goal_add_form_container" class="large-4 medium-4 small-4 large-offset-4 columns transition text-center">
+            <dl class="tabs tabs_2" data-tab>
+              <dd class="active"><a href="#panel-img_url">Image Url</a></dd>
+              <dd><a href="#panel-img_upload">Upload</a></dd>
+            </dl>
+            <div class="tabs-content">
+              <div class="content active" id="panel-img_url">
+                <form id="goal_submit_form" method="post" action="/add_goal">
+                    <input id="goal_img_url" name="goal_img_url" type="text" placeholder="paste image url here." />
+                    <input id="goal_title" name="goal_title" type="text" placeholder="Victory Title" />
+                    <textarea id="goal_description" name="goal_description" placeholder="describe your Victory"></textarea>
+                    <input type="hidden" name="already_achieved" id="already_achieved" value="yes" />
+                    
+                    <input type="submit" value="Save" class="button" />
+                </form>
+              </div>
+              <div class="content" id="panel-img_upload">
+                <form id="goal_img_upload_form" action="" method="post" enctype="multipart/form-data">
+                    <label>Upload your Victory cover image (max size 3MB)</label>
+                    <input type="file" id="goal_img" name="goal_img" accept="image/*" />
+                    <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
+
+                    <input id="goal_title_img_upload" name="goal_title_img_upload" type="text" placeholder="Victory Title" />
+                    <textarea id="goal_description_img_upload" name="goal_description_img_upload" placeholder="describe your Victory"></textarea>
+                    <input type="hidden" name="already_achieved" id="already_achieved" value="yes" />
+                    
+                    <div id="goal_img_submit" class="button">Save</div>
+                </form>
+
+              </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- END Add Victory form -->
+    <div class="row">
+        <div id="goal_container_front" class="large-12 columns">
+            <div id="goal_list" class="page_victories" data-user-id="{{user_obj.key.id()}}">
+                {% for g in goals %}
+                    <div id="goal_{{g.key.id()}}" class="item goal_modal_trigger" data-goal-id="{{g.key.id()}}">
+                            <img src="{{g.image}}" class="goal_card_img" />
+                            
+                            {% if g.achieved == True %}
+                                {% if g.vic_pics %}
+                                    <div class="achieved_icon_container abs">
+                                        <span class="achieved_icon text-right margin-right-1em">
+                                            <span class="album_icon">
+                                                <a href="/victory_album/{{g.key.id()}}">
+                                                <svg version="1.1"
+                                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                                     x="0px" y="0px" width="78.1px" height="78.1px" viewBox="0 0 78.1 78.1" enable-background="new 0 0 78.1 78.1"
+                                                     xml:space="preserve">
+                                                <defs>
+                                                </defs>
+                                                <path d="M78.1,14.3C78.1,6.4,71.7,0,63.8,0C56,0,49.6,6.3,49.5,14.1H6c-3.3,0-6,2.7-6,6v52c0,3.3,2.7,6,6,6h52c3.3,0,6-2.7,6-6V28.7
+                                                    C71.8,28.6,78.1,22.2,78.1,14.3z M60,72.1c0,1.1-0.9,2-2,2H6c-1.1,0-2-0.9-2-2v-7h56V72.1z M15.2,61.1l10.7-21.9l10.4,16.9
+                                                    c0.3,0.6,0.9,0.9,1.6,0.9c0.7,0,1.3-0.2,1.7-0.7l4.4-5.5l4.9,10.2H15.2z M53.3,61.1l-7.1-14.8c-0.3-0.6-0.9-1-1.6-1.1
+                                                    c-0.7-0.1-1.4,0.2-1.8,0.7l-4.6,5.7L27.4,34.1c-0.4-0.6-1.1-1-1.8-1c-0.7,0-1.4,0.5-1.7,1.1L10.8,61.1H4v-41c0-1.1,0.9-2,2-2h44
+                                                    c1.3,4.9,5.2,8.7,10,10v33H53.3z M63.8,25c-5.9,0-10.7-4.8-10.7-10.7S57.9,3.7,63.8,3.7s10.7,4.8,10.7,10.7S69.7,25,63.8,25z"/>
+                                                </svg>
+                                                    {% if g.vic_pics|length > 9 %}
+                                                        <span class="number_of_vic_pics_a">+</span>
+                                                    {% else %}
+                                                        <span class="number_of_vic_pics_a">{{g.vic_pics|length}}</span>
+                                                    {% endif %}
+                                                </a>
+                                            </span>
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            
+                            <div class="goal_card_text" class="row text-center">
+                                
+                                {% if user_obj %}
+                                    {% if g.user == user_obj.key %}
+                                        <div class="row text-center no_margin goal_card_text_container">
+                                            <div class="goal_card_title pad_right_35px">{{g.title}}</div>
+                                            {% if g.description %}
+                                                <div class="goal_description overflow_ellipsis">{{g.description}}</div>
+                                            {% endif %}
+                                            <div class="view_like_container_goal">
+                                                <div class="like_view_btn" data-goal-id="{{g.key.id()}}">
+                                                    <span class="l_v_icon border-right"><i class="li_eye"></i></span> <span id="goal_view_{{g.key.id()}}">{{g.views}}</span>
+                                                </div> 
+                                                <div class="like_view_btn goal_like_btn" data-goal-id="{{g.key.id()}}">
+                                                    <span class="l_v_icon border-right"><i class="li_heart"></i></span> {{g.likes}}
+                                                </div>
+                                            </div>
+                                            <div class="row user_controls hidden">
+                                                <div class="like_view_btn pointer" data-goal-id="{{g.key.id()}}">
+                                                    <i class="li_pen"></i> edit
+                                                </div> 
+                                                <div class="like_view_btn goal_like_btn pointer" data-goal-id="{{g.key.id()}}">
+                                                    <i class="li_trash"></i> delete
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row bottom_band text-center" data-user-id="{{g.user.get().key.id()}}">
+                                            by you
+                                        </div>
+                                    {% else %}
+                                        <div class="row text-center no_margin goal_card_text_container">
+                                            <div class="goal_card_title">{{g.title}}</div>
+                                            <div class="goal_description">{{g.description}}</div>
+                                            <div class="view_like_container_goal">
+                                                <div class="like_view_btn" data-goal-id="{{g.key.id()}}">
+                                                    <span class="l_v_icon border-right"><i class="li_eye"></i></span> <span id="goal_view_{{g.key.id()}}">{{g.views}}</span>
+                                                </div> 
+                                                <div class="like_view_btn goal_like_btn" data-goal-id="{{g.key.id()}}">
+                                                    <span class="l_v_icon border-right"><i class="li_heart"></i></span> {{g.likes}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row bottom_band text-center user_profile_modal pointer" data-user-id="{{g.user.get().key.id()}}">
+                                            by {{g.user.get().name}}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                {% endfor %}
+                {% if next %}
+                    <div id="next_curs" data-cursor="{{next}}" class="hidden"></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

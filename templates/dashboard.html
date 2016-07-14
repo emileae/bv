@@ -1,0 +1,15 @@
+{% extends "base_temp.html" %}
+{% block main %}
+	<div class="bv_panel">
+		<h2>Leader Board</h2>
+		<div>Total Users {{total_users}} (only counts up to 1000 users)</div>
+		<hr>
+		<div>The top 1000 users (ordered by total points)</div>
+		<br>
+		<ol>
+		{% for u in users %}
+			<li> {{u.name}}, goals: {{u.total_goals}}, victories: {{u.total_victories}}, followers: {{u.total_followers}}, points: {{u.total_points}} </li>
+		{% endfor %}
+		</ol>
+	</div>
+{% endblock %}

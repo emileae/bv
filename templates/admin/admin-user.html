@@ -1,0 +1,63 @@
+{% extends "cms.html" %}
+
+{% block main %}
+
+	<div class="row s12">
+		<div class="col s12">
+            <h5>User - {{user_obj.name}}</h5>
+
+            <div class="row">
+              <div class="col card s12 m6 offset-m3 blue-grey darken-1">
+                <div class="card-image white-text">
+                  <img src="{{user_obj.profile_img}}">
+                </div>
+                <div class="card-content white-text">
+                  <span class="card-title">{{user_obj.name}}</span>
+                  <p><a href="mailto:{{user_obj.email}}" target="_blank">{{user_obj.email}}</a></p>
+                  <p>{{user_obj.description}}</p>
+                </div>
+              </div>
+            </div>
+
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+  <script type="text/javascript">
+    /*$("body").on("click", ".toggle-form", function(){
+      var $this = $(this);
+      var $form = $this.next(".post-form-container");
+      console.log("hello: ", $form);
+      $form.toggleClass("close");
+      $form.toggleClass("open");
+    });
+
+    $("body").on("submit", ".country-explorer-form", function(e){
+      e.preventDefault();
+
+      var $form = $(this);
+      var action = $form.attr("action");
+      var method = $form.attr("method");
+
+      $.post(action, $form.serialize(), function(data){
+        console.log(data);
+      }).fail(function(){
+        console.log("failed...");
+      });
+
+    });*/
+
+  </script>
+
+{% endblock %}
+
+
+
+
+
+
+

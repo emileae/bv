@@ -1,0 +1,37 @@
+{% extends "login_temp.html" %}
+
+{% block main %}
+
+    <div class="row margin-top-5em margin-bottom-2em">
+        <div id="bv_logo" class="large-4 large-offset-4 columns">
+            <img src="/static/images/Logo.png" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="register_block">
+            <div id="register_header" class="row text-center roboto no_margin">Login</div>
+            <div class="row text-center register_panel no_margin">
+                <form method="post" action="/login" class="no_margin">
+
+                    <input type="email" id="email" name="email" placeholder="Email"></input>
+                    
+                    <input type="password" id="password" name="password" placeholder="Password"></input>
+                    
+                    <div id="register_checkbox">
+                        <a href="#" data-reveal-id="forgotPasswordModal">Forgot Password?</a>
+                    </div>
+                    
+                    <input type="submit" value="Login" class="black_btn"></input>
+                    
+                    {% if error %}
+                        <small class="error">{{error}}</small>
+                    {% endif %}
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

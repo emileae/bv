@@ -1,0 +1,335 @@
+
+<div class="row goal_page_feed_row">
+    <div class="large-2 small-2 columns user_profile_modal feed_profile_card" data-user-id="{{goal_user.key.id()}}">
+        <div class="profile_img_container" style="background-image: url('{{goal_user.profile_img}}')">
+        </div>
+            <div class="user_profile_name">{{goal_user.name}}</div>
+        <div class="text-center">
+            <img class="diamond_line" src="/static/images/diamond.png" />
+        </div>
+            
+            <div class="italic roboto text-center border-bottom pad_10px">
+                {{goal_user.total_followers}} Followers
+            </div>
+            
+            <div class="italic roboto text-center border-bottom pad_10px">
+                {{goal_user.total_goals}} Goals
+            </div>
+            
+            <div class="italic roboto text-center border-bottom pad_10px">
+                {{goal_user.total_victories}} Victories
+            </div>
+
+            <div class="user_profile_text">
+                <div>
+                    <div class="score_diamond text-center">
+                        <span class="score_number">{{goal_user.total_points}}</span>
+                    </div>
+                    <div class="total_score_text">TOTAL SCORE</div>
+                </div>
+                <div class="user_status_container">
+                    <div class="user_status" style="
+                    {% if goal_user.status == 'None' %}
+                        background-image: url('/static/images/1_beginner.png')
+                    {% elif goal_user.status == 'beginner' %}
+                        background-image: url('/static/images/1_beginner.png')
+                    {% elif goal_user.status == 'bronze' %}
+                        background-image: url('/static/images/2_Bronze.png')
+                    {% elif goal_user.status == 'silver' %}
+                        background-image: url('/static/images/3_silver.png')
+                    {% elif goal_user.status == 'gold' %}
+                        background-image: url('/static/images/4_gold.png')
+                    {% elif goal_user.status == 'supreme' %}
+                        background-image: url('/static/images/5_supreme.png')
+                    {% else %}
+                        background-image: url('/static/images/1_beginner.png')
+                    {% endif %}
+                    
+                    "></div>
+                </div>
+            </div>
+        <div class="bottom_img_dotted"></div>
+    </div>
+    <div class="large-10 small-10 columns feed_image_container" data-goal-id="{{goal_profile.key.id()}}">
+        <div class="feed_goal_heading text-center">
+            {{goal_profile.title}}
+        </div>
+        
+        <div class="goal_page_description">
+            {{goal_profile.description}}
+        </div>
+        
+        <div class="feed_cover_container">
+            <!--<img id="modal_goal_profile_img" src="{{goal_profile.image}}" class="feed_image" {% if goal_profile.img_top %}style="top: {{goal_profile.img_top}}px;"{% endif %} />-->
+            <img id="modal_goal_profile_img" src="{{goal_profile.image}}" class="feed_image" onload="resize_feed_image()" /><!-- onerror="this.src='/static/images/error_img.jpg'" -->
+            <iframe id="vid_iframe" type="text/html" width="640" height="390"
+              src=""
+              frameborder="0"/>
+        </div>
+        <div class="goal_page_text_container">
+            <div class="goal_page_text row">
+                <div class="large-12 medium-12 small-12 columns">
+                    <div class="like_view_btn" data-goal-id="{{goal_profile.key.id()}}">
+                            <span class="l_v_icon border-right">
+                                    <img src="/static/images/view.svg" />
+                            </span> <span id="goal_view_{{goal_profile.key.id()}}">{{goal_profile.views}} Views</span>
+                        </div> 
+                        <div class="like_view_btn goal_like_btn" data-goal-id="{{goal_profile.key.id()}}">
+                            <span class="l_v_icon border-right">
+                                <img src="/static/images/like.svg" />
+                            </span> {{goal_profile.likes}} Likes
+                        </div>
+
+                        <span class="soc_share fb_blue ss_fb">
+                            <a class="share_point fb_share_btn">
+                                <svg version="1.1"
+                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                     x="0px" y="0px" width="320px" height="320px" viewBox="0 0 320 320" enable-background="new 0 0 320 320" xml:space="preserve">
+                                <defs>
+                                </defs>
+                                <path d="M160,0C71.5,0,0,71.5,0,160s71.5,160,160,160s160-71.5,160-160S248.5,0,160,0z M160,300c-77,0-140-63-140-140S83,20,160,20
+                                    s140,63,140,140S237,300,160,300z"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M137.5,242.5l0-80l-20,0l0-30l20,0c0-51.5,2.2-55,65-55l0,30c-33.1,0-30,1.8-30,25
+                                    l30,0l0,30l-30,0l0,80L137.5,242.5z"/>
+                                </svg>
+                            </a>
+                        </span>
+                        
+                        <span class="soc_share tw_blue ss_tw">
+                            <a href="http://twitter.com/home?status=Check%20out%20{{goal_user.name}}%20on%20Bucket%20Vision:%20http://bucketvision.com/g/{{goal_profile.key.id()}}" class="share_point soc_share" target="_blank">
+                                <svg version="1.1"
+                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                     x="0px" y="0px" width="320px" height="320px" viewBox="0 0 320 320" enable-background="new 0 0 320 320" xml:space="preserve">
+                                <defs>
+                                </defs>
+                                <path d="M160,0C71.5,0,0,71.5,0,160s71.5,160,160,160s160-71.5,160-160S248.5,0,160,0z M160,300c-77,0-140-63-140-140S83,20,160,20
+                                    s140,63,140,140S237,300,160,300z"/>
+                                <path d="M195,167.5h-50v15c0,5.5,4.5,10,10,10h40c11,0,20,9,20,20s-9,20-20,20h-50c-22,0-40-18-40-40v-85c0-11,9-20,20-20
+                                    s20,9,20,20v20h50c11,0,20,9,20,20S206,167.5,195,167.5z"/>
+                                </svg>
+                            </a>
+                            <script>
+                            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+                            </script>
+                        </span>
+                        
+                    {% if user_obj.key == goal_profile.user %}
+                        <div id="change_btn" class="blue_btn toggle_on">Edit</div>
+                    {% else %}
+                        <div class="steal_goal blue_btn" data-goal-id="{{goal_profile.key.id()}}" data-user-name="{{goal_user.name}}">Steal goal</div>
+                        <div class="steal_victory blue_btn" data-goal-id="{{goal_profile.key.id()}}" data-user-name="{{goal_user.name}}">Steal victory</div>
+                    {% endif %}
+                        
+                </div>
+                <!--<div class="large-6 medium-6 small-6 columns">
+                    <div class="share_btn expand">Share</div>
+                </div>-->
+            </div>
+            <div class="row">
+                <div id="toggle_container" class="large-12 medium-12 small-12 columns transition">
+                    <div class="bv_panel no_margin">
+                        <div class="share_container text-center hidden">
+                            <a href="#" target="_blank" class="share_point fb_share_btn">
+                                <i class="fi-social-facebook"></i> Share
+                            </a>
+                             | 
+                            <a href="https://twitter.com/share" data-url="http://bucketvision.com/g/{{goal_profile.key.id()}}" data-via="scknss" data-size="large" data-count="none" class="share_point" target="_blank"><i class="fi-social-twitter"></i> Share</a>
+                            <script>
+                            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+                            </script>
+                        </div>
+                        <div class="edit_container text-center hidden">
+                            {% if user_obj.key == goal_profile.user %}
+                                <a href="/edit_goal/{{goal_profile.key.id()}}">
+                                    <div class="like_view_btn" data-goal-id="{{goal_profile.key.id()}}">
+                                        <span class="l_v_icon border-right">
+                                            <svg version="1.1"
+                                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                                 x="0px" y="0px" width="289px" height="289.1px" viewBox="0 0 289 289.1" enable-background="new 0 0 289 289.1"
+                                                 xml:space="preserve">
+                                            <defs>
+                                            </defs>
+                                            <path fill="#363435" d="M281.1,46.2L242.8,7.9c-10.6-10.6-27.7-10.6-38.3,0L32.6,179.8l-1.4,1.4l-3.3,3.3c-5.5,5.5-9,12.5-10.3,20.2
+                                                L0.2,278c-0.7,3.1,0.2,6.3,2.4,8.5c2.2,2.2,5.4,3.1,8.5,2.4l73.3-17.4c7.7-1.2,14.7-4.8,20.2-10.3l3.3-3.3l1.4-1.4L281.1,84.7
+                                                C291.6,74.1,291.6,56.9,281.1,46.2z M81.5,253.5l-0.7,0.1l-0.7,0.1l-59,14l14-59l0.2-0.7l0.1-0.7c0.4-2.5,1.3-4.8,2.6-6.8l50.3,50.3
+                                                C86.3,252.1,84.1,253,81.5,253.5z M101.5,238.5l-51-51.1L185.3,52.7l12.8,12.8L63.3,200.2l6.4,6.4L204.4,71.9l12.8,12.8L82.4,219.4
+                                                l6.4,6.4L223.5,91.1l12.8,12.8L101.5,238.5z M268.3,71.9l-19.2,19.2L198,40l19.2-19.2c3.5-3.5,9.3-3.5,12.8,0l38.3,38.3
+                                                C271.8,62.6,271.8,68.2,268.3,71.9z"/>
+                                            </svg>
+                                        </span>
+                                        <!--<i class="li_pen"></i>--> Edit
+                                    </div> 
+                                </a>
+                                
+                                <div class="like_view_btn goal_delete" data-goal-id="{{goal_profile.key.id()}}">
+                                    <span class="l_v_icon border-right">
+                                        <svg version="1.1"
+                                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                             x="0px" y="0px" width="253px" height="289.1px" viewBox="0 0 253 289.1" enable-background="new 0 0 253 289.1"
+                                             xml:space="preserve">
+                                        <defs>
+                                        </defs>
+                                        <g>
+                                            <path fill="#363435" d="M161.1,256.6c0,0.2,0,0.3,0,0.5c0-0.1,0-0.2,0-0.4C161.2,256.7,161.1,256.6,161.1,256.6z"/>
+                                            <path fill="#363435" d="M126.5,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9c-5,0-9,4-9,9v126.4C117.5,248.8,121.6,252.9,126.5,252.9z"/>
+                                            <path fill="#363435" d="M171.7,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9s-9,4-9,9v126.4C162.7,248.8,166.7,252.9,171.7,252.9z"/>
+                                            <path fill="#363435" d="M81.4,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9s-9,4-9,9v126.4C72.4,248.8,76.4,252.9,81.4,252.9z"/>
+                                            <path fill="#363435" d="M225.9,45.2h-18.1V18.1c0-10-8.1-18.1-18.1-18.1H63.3c-10,0-18.1,8.1-18.1,18.1v27.1H27.1
+                                                C12.1,45.2,0,57.3,0,72.3v18.1h27.1V262c0,15,12.1,27.1,27.1,27.1h144.5c15,0,27.1-12.1,27.1-27.1V90.3H253V72.2
+                                                C253,57.3,240.9,45.2,225.9,45.2z M63.3,18.1h126.5v27.1H63.3V18.1z M207.8,262c0,5-4.1,9-9,9H54.3c-5,0-9-4.1-9-9V90.3h162.6V262
+                                                H207.8z M234.9,72.3v9H18.2v-9l0,0c0-5,4.1-9,9-9h198.7C230.9,63.3,234.9,67.3,234.9,72.3L234.9,72.3z"/>
+                                        </g>
+                                        </svg>
+                                    </span>
+                                    <!--<i class="li_trash"></i>--> Delete
+                                </div>
+                                
+                                {% if goal_profile.achieved %}
+                                    <a href="/add_victory_media/{{goal_profile.key.id()}}">
+                                        <div class="like_view_btn">
+                                            <i class="icon-plus"></i> Add
+                                        </div>
+                                    </a>
+                                {% else %}
+                                    <div class="like_view_btn achieved_btn" data-goal-id="{{goal_profile.key.id()}}"> 
+                                        <span class="l_v_icon border-right">
+                                            <svg version="1.1"
+                                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                                 x="0px" y="0px" width="64px" height="88.2px" viewBox="0 0 64 88.2" enable-background="new 0 0 64 88.2" xml:space="preserve">
+                                            <defs>
+                                            </defs>
+                                            <path d="M64,32C64,14.3,49.7,0,32,0S0,14.3,0,32c0,11,5.5,20.6,13.9,26.4v29.8l18-9.2l18,9.2V58.5C58.4,52.8,64,43,64,32z
+                                                 M45.9,81.6l-14-7.1l-14,7.1V60.7c4.3,2.1,9,3.3,14.1,3.3c5,0,9.7-1.1,13.9-3.2V81.6z M32,60C16.6,60,4,47.4,4,32S16.6,4,32,4
+                                                s28,12.6,28,28S47.4,60,32,60z"/>
+                                            </svg>
+                                        </span>
+                                    Achieved</div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if goal_profile.achieved %}
+            {% if vic_media %}
+                <div id="orbit_row_goal_page" class="row">
+                    <div id="victory_orbit" class="large-12 small-12 columns">
+                        <ul data-orbit>
+                            {% for v in vic_media %}
+                                {% if loop.index % 4 == 1 %}
+                                <li>
+                                    {% if v["type"] == "pic" %}
+                                        <div style="background-image:url('{{v['url']}}')" class="vic_orbit_thumb_goal_page vic_orbit_thumb_pic" data-img-url="{{v['url']}}"></div>
+                                    {% elif v["type"] == "vid" %}
+                                        <div style="background-image:url('http://img.youtube.com/vi/{{v['url']}}/hqdefault.jpg')" class="vic_orbit_thumb_goal_page vic_orbit_thumb_vid" data-img-url="{{v['url']}}">
+                                            <span class="video_icon"><img src="/static/images/video_triangle.png" width="30px" /></span>
+                                        </div>
+                                    {% endif %}
+                                {% elif loop.index % 4 == 2 or loop.index % 4 == 3 %}
+                                    {% if v["type"] == "pic" %}
+                                        <div style="background-image:url('{{v['url']}}')" class="vic_orbit_thumb_goal_page vic_orbit_thumb_pic" data-img-url="{{v['url']}}"></div>
+                                    {% elif v["type"] == "vid" %}
+                                        <div style="background-image:url('http://img.youtube.com/vi/{{v['url']}}/hqdefault.jpg')" class="vic_orbit_thumb_goal_page vic_orbit_thumb_vid" data-img-url="{{v['url']}}">
+                                            <span class="video_icon"><img src="/static/images/video_triangle.png" width="30px" /></span>
+                                        </div>
+                                    {% endif %}
+                                {% elif loop.index % 4 == 0 %}
+                                    {% if v["type"] == "pic" %}
+                                        <div style="background-image:url('{{v['url']}}')" class="vic_orbit_thumb_goal_page vic_orbit_thumb_pic" data-img-url="{{v['url']}}"></div>
+                                    {% elif v["type"] == "vid" %}
+                                       <div style="background-image:url('http://img.youtube.com/vi/{{v['url']}}/hqdefault.jpg')" class="vic_orbit_thumb_goal_page vic_orbit_thumb_vid" data-img-url="{{v['url']}}">
+                                        <span class="video_icon"><img src="/static/images/video_triangle.png" width="30px" /></span>
+                                       </div>
+                                    {% endif %}
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                                <li>
+                                    <div style="background-image:url('{{goal_profile.image}}')" class="vic_orbit_thumb_goal_page vic_orbit_thumb_pic" data-img-url="{{goal_profile.image}}"></div>
+                                </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <script type="text/javascript">
+                    $(document).foundation({
+                      orbit: {
+                        animation: 'slide',
+                        timer_speed: 5000,
+                        pause_on_hover: true,
+                        animation_speed: 1000,
+                        navigation_arrows: true,
+                        slide_number: false,
+                        timer_show_progress_bar: false,
+                        next_on_click: false,
+                        bullets: false,
+                        swipe: true
+                      }
+                    });
+
+                </script>
+            {% endif %}
+        {% endif %}
+        
+        <div id="fb-root"></div>
+        <script type="text/javascript">
+            
+            var fbAppId = '722137364473621';//'645800148788776';
+            window.fbAsyncInit = function() {
+                FB.init({
+                  appId      : fbAppId, // App ID
+                  status     : true,    // check login status
+                  cookie     : true,    // enable cookies to allow the
+                                        // server to access the session
+                  xfbml      : true     // parse page for xfbml or html5
+                                        // social plugins like login button below
+                });
+          };
+          
+            $("body").on("click", ".fb_share_btn", function(e){
+                e.preventDefault();
+                share_dialog();
+            });
+
+          function share_dialog(){
+                //e.preventDefault();
+                
+                var img_url = $("#modal_goal_profile_img").attr("src");
+                
+                if( img_url.indexOf( "fbcdn" ) > -1 ){
+                    var img_url = "http://bucketvision.com/static/images/bucketvision_title_fb.png"
+                };
+                
+                FB.ui(
+                  {
+                    display: 'popup',
+                    method: 'feed',
+                    name: '{{goal_profile.title}}',
+                    link: 'http://bucketvision.com/g/{{goal_profile.key.id()}}',
+                    picture: img_url,
+                    caption: '',
+                    description: 'Join Bucket Vision, a place to share your Visions and Victories'
+                  },
+                  function(response) {
+                  }
+                );
+          };
+            
+            
+            (function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&appId=722137364473621&version=v2.0";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            //alert("fb_loaded");
+            
+        </script>
+        
+    </div>
+</div>
+

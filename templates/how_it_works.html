@@ -1,0 +1,107 @@
+{% extends "base_temp.html" %}
+{% block main %}
+
+    <div class="text-center">
+        <h1>How it Works</h1>
+    </div>
+    <div id="hiw_container" class="">
+        <div class="row hiw_row hiw_row_top">
+            
+            <div class="hiw_column_L bv_panel no_margin pad_hiw_txt">
+                <div class="hiw_title">Create a <br />Vision Board</div>
+                <hr class="thick_hr" />
+                <div class="hiw_description">
+                    A collection of goals you want to achieve.
+                </div>
+            </div>
+            <div class="hiw_column bv_panel">
+                <img src="/static/images/hiw_1.jpg" height="100%"/>
+            </div>
+            <div class="hiw_column_R bv_panel no_margin">
+                <img src="/static/images/hiw_2.jpg" height="100%"/>
+            </div>
+            
+        </div>
+        <div class="row text-center margin-top-1em hiw_bottom_text bottom_band_no_caps">
+            This collection of goals can be viewed as a "Vision Board" or a "Bucket List".
+        </div>
+        
+        <div class="row hiw_row">
+            <div class="hiw_column_L bv_panel no_margin">
+                <img src="/static/images/hiw_3.jpg" height="100%"/>
+            </div>
+            <div class="hiw_column bv_panel">
+                <img src="/static/images/hiw_4.jpg" height="100%"/>
+            </div>
+            <div class="hiw_column_R bv_panel no_margin pad_hiw_txt">
+                <div class="hiw_title">Create a <br />Victory Board</div>
+                <hr class="thick_hr" />
+                <div class="hiw_description">
+                    A collection of your greatest achievements in life so far. The things you are most proud of. Or just some random radness you did today.
+                </div>
+            </div>
+        </div>
+        <div class="row text-center margin-top-1em hiw_bottom_text bottom_band_no_caps">
+            Add completed goals to your 'Victory Board' and attach photo albums and videos to your Victory.
+        </div>
+        
+        <div class="row hiw_row">
+        
+            <div class="hiw_column_L bv_panel no_margin pad_hiw_txt">
+                <div class="hiw_title">Share <br />and Connect</div>
+                <hr class="thick_hr" />
+                <div class="hiw_description">
+                    Find and invite friends. See their latest goals and victories via the news feed.
+                </div>
+                
+            </div>
+            <div class="hiw_column bv_panel">
+                <img src="/static/images/hiw_5.jpg" height="100%"/>
+            </div>
+            <div class="hiw_column_R bv_panel no_margin">
+                <img src="/static/images/hiw_6.jpg" height="100%"/>
+            </div>
+        </div>
+        <div class="row text-center hiw_bottom_text bottom_band_no_caps">
+            Share goals and victories on facebook and twitter.
+        </div>
+        
+        <div class="row hiw_row">
+            <div class="hiw_column_L bv_panel no_margin">
+                <img src="/static/images/hiw_7.jpg" height="100%"/>
+            </div>
+            <div class="hiw_column bv_panel">
+                <img src="/static/images/hiw_8.jpg" height="100%"/>
+            </div>
+            <div class="hiw_column_R bv_panel no_margin pad_hiw_txt">
+                <div class="hiw_title">Get <br />Inspired</div>
+                <hr class="thick_hr" />
+                <div class="hiw_description">
+                    View all the latest goals from the Bucket Vision community. Steal goals that you like and add them to your list.
+                </div>
+                
+            </div>
+        </div>
+        <div class="row text-center hiw_bottom_text bottom_band_no_caps">
+            Then... get out there and live YOUR life !
+        </div>
+
+    </div>
+
+    <div id="hiw_orange_footer" class="text-center">
+        {% if user_obj %}
+            Bucket Vision is a community of like minded<br>
+                people that live to DO and SHARE.<br>
+                To INSPIRE and be INSPIRED.
+        {% else %}
+            <div id="orange_footer_btn_container" class="text-center">
+            <a href="/login"><div class="blue_btn_banner inline">Login</div></a>
+            <a href="/register"><div class="blue_btn_banner inline">Sign Up</div></a>
+            </div>
+        {% endif %}
+    </div>
+
+
+{% endblock %}
+
+

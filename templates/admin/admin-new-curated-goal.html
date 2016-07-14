@@ -1,0 +1,140 @@
+{% extends "cms.html" %}
+
+{% block main %}
+
+	<div class="row s12">
+		<div class="col s12">
+
+            <h5>New Curated Goal</h5>
+            <div class="row">
+              <div class="col s12">
+                
+                <form id="new_curated_goal_form" method="post" action="/admin/country_explorer/curated/new" enctype="multipart/form-data">
+
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="title" name="title" type="text" class="validate">
+                      <label for="title">Title</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <textarea id="description" name="description" class="materialize-textarea"></textarea>
+                      <label for="description">Description</label>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="input-field col s12">
+                        <select id="country" name="country">
+                          <option value="" disabled selected>Choose a country</option>
+                          {% for country in countries %}
+                            <option value="{{country['countryCode']}}">{{country['countryName']}}</option>
+                          {% endfor %}
+                        </select>
+                        <label>Country</label>
+                      </div>
+                    </div>
+
+                  <div class="row">
+                    <div class="col s12 file-field input-field">
+                      <div class="btn">
+                        <span>File</span>
+                        <input type="file" name="image">
+                      </div>
+                      <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top:1rem;">
+                    <div class="col s12 align-left">
+                      <button class="btn"> <i class="fa fa-plus"></i> Save</button>
+                    </div>
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+
+/*  function submit_form_ajax($form, method, action, success){
+
+  var form = $form[0]; // You need to use standart javascript object here
+  var formData = new FormData(form);
+
+  var loader = $form.find(".loader-icon");
+  var loader_success = $form.find(".loader-success");
+  var loader_error = $form.find(".loader-error");
+  // reset loaders
+  if(!loader_success.hasClass("hide")){
+    loader_success.addClass("hide");
+  };
+  if(!loader_error.hasClass("hide")){
+    loader_error.addClass("hide");
+  };
+
+  loader.toggleClass("hide");
+
+  function success_fn(data){
+    loader.addClass("hide");
+    loader_error.addClass("hide");
+    loader_success.removeClass("hide");
+
+    setTimeout(function(){
+      loader_success.addClass("hide");
+    }, 3000);
+
+    success(data, $form);
+
+  };
+
+  $.ajax({
+      url: action,
+      type: method,
+      data: formData,
+      
+      // THIS MUST BE DONE FOR FILE UPLOADING
+      contentType: false,
+      processData: false,
+      
+      success: success_fn
+  }).fail(function(){
+    loader.addClass("hide");
+    loader_error.removeClass("hide");
+    loader_success.addClass("hide");
+  });
+
+};
+
+$("body").on("submit", "#new_curated_goal_form", function(e){
+  e.preventDefault();
+
+  var $form = $(this);
+  var method = $form.attr("method");
+  var action = $form.attr("action")
+
+  var success = function(){
+    alert("curated goal posted");
+    $form[0].reset();
+  }
+
+  submit_form_ajax($form, method, action, success);
+});*/
+
+</script>
+
+{% endblock %}
+
+
+
+
+

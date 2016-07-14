@@ -1,0 +1,71 @@
+<div id="goal_{{g.key.id()}}" class="item goal_modal_trigger" data-goal-id="{{g.key.id()}}">
+    <img src="{{g.image}}" class="goal_card_img" onerror="this.src='/static/images/error_img.jpg'" />
+    <div class="goal_card_text" class="row text-center">
+        <div>
+            {% if is_admin_user %}<button class="admin_delete danger" data-id="{{g.key.id()}}">delete</button>{% endif %}
+        </div>
+        
+        {% if user_obj %}
+            {% if g.user == user_obj.key %}
+                <div class="row text-center no_margin goal_card_text_container">
+                    <div class="goal_card_title">{{g.title}} 
+                        
+                    </div>
+                    {% if g.description %}
+                        <div class="goal_description overflow_ellipsis">{{g.description}}</div>
+                    {% endif %}
+                    <div class="view_like_container_goal">
+                        <div class="like_view_btn" data-goal-id="{{g.key.id()}}">
+                            <span class="l_v_icon border-right">
+                                <!--<i class="li_eye"></i>-->
+                                    <img src="/static/images/view.svg" />
+                            </span> <span id="goal_view_{{g.key.id()}}">{{g.views}} Views</span>
+                        </div> 
+                        <div class="like_view_btn goal_like_btn" data-goal-id="{{g.key.id()}}">
+                            <span class="l_v_icon border-right">
+                                <!--<i class="li_heart"></i>-->
+                                <img src="/static/images/like.svg" />
+                            </span> {{g.likes}} Likes
+                        </div>
+                    </div>
+                    <div class="row user_controls hidden">
+                        <div class="like_view_btn pointer" data-goal-id="{{g.key.id()}}">
+                            <i class="li_pen"></i> edit
+                        </div> 
+                        <div class="like_view_btn goal_like_btn pointer" data-goal-id="{{g.key.id()}}">
+                            <i class="li_trash"></i> delete
+                        </div>
+                    </div>
+                </div>
+                <div class="row bottom_band text-center" data-user-id="{{g.user.get().key.id()}}">
+                    by you
+                </div>
+            {% else %}
+                <div class="row text-center no_margin goal_card_text_container">
+                    <div class="goal_card_title">{{g.title}}
+                    </div>
+                    <div class="goal_description overflow_ellipsis">{{g.description}}</div>
+                    <div class="view_like_container_goal">
+                        <div class="like_view_btn" data-goal-id="{{g.key.id()}}">
+                            <span class="l_v_icon border-right">
+                                <!--<i class="li_eye"></i>-->
+                                <img src="/static/images/view.svg" width="27px" height="27px" />
+                            </span>
+                            <span id="goal_view_{{g.key.id()}}">{{g.views}} Views</span>
+                        </div> 
+                        <div class="like_view_btn goal_like_btn" data-goal-id="{{g.key.id()}}">
+                            <span class="l_v_icon border-right">
+                                <!--<i class="li_heart"></i>-->
+                                <img src="/static/images/like.svg" width="27px" height="27px" />
+                            </span> 
+                            <span id="goal_like_{{g.key.id()}}">{{g.likes}}</span> Likes
+                        </div>
+                    </div>
+                </div>
+                <div class="row bottom_band text-center user_profile_modal pointer" data-user-id="{{g.user.get().key.id()}}">
+                    by {{g.user.get().name}}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>

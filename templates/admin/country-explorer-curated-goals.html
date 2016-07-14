@@ -1,0 +1,234 @@
+{% extends "cms.html" %}
+
+{% block main %}
+
+	<div class="row s12">
+		<div class="col s12">
+
+            <h5>Country Explorer {% if country %} - {{country.countryName}}{% endif %} </h5>
+            <h6>Goals</h6>
+
+            <div class="row">
+              <div class="col s12 center">
+                <!-- <h6>Filter by Country</h6>
+                <form id="country-filter-form" method="get" action="/admin/country_explorer/curated">
+                  <div class="row">
+                      <div class="input-field col s12 m6 offset-m3">
+                        <select name="country">
+                          {% if country %}
+                            <option value="{{country.country_code}}" class="country-filter">{{country.country_name}}</option>
+                          {% else %}
+                            <option value="" disabled selected>Choose a country</option>
+                          {% endif %}
+                          {% for c in countries %}
+                            <option value="{{c['countryCode']}}" class="country-filter">{{c['countryName']}}</option>
+                          {% endfor %}
+                        </select>
+                        <label>Country</label>
+                      </div>
+                    </div>
+                </form> -->
+
+                <a class='dropdown-button btn' href='#' data-activates='country-filter' style="width:350px;">Filter Country</a>
+
+                <!-- Dropdown Structure -->
+                <ul id='country-filter' class='dropdown-content'>
+                  <li><a href="/admin/country_explorer/curated">All</a></li>
+                  {% if country %}
+                    <!-- <option value="{{country.country_code}}" class="country-filter">{{country.country_name}}</option> -->
+                    <li><a href="/admin/country_explorer/curated?country={{country.countryCode}}">{{country.countryName}}</a></li>
+                    <li class="divider"></li>
+                  {% endif %}
+                  {% for c in countries %}
+                    <!-- <option value="{{c['countryCode']}}" class="country-filter">{{c['countryName']}}</option> -->
+                    <li><a href="/admin/country_explorer/curated?country={{c['countryCode']}}">{{c['countryName']}}</a></li>
+                  {% endfor %}
+                </ul>
+
+              </div>
+            </div>
+
+            {% if goals %}
+
+            {% for g in goals %}
+            <div id="curated_goal_{{g.key.id()}}" class="row">
+              <div class="col card s12 m6 offset-m3 blue-grey darken-1">
+                <div class="card-image white-text">
+                  <img src="{{g.image}}">
+                </div>
+                <div class="card-content white-text">
+                  <span class="card-title">{{g.title}}</span>
+                    {% if g.user.id() == curator_id %}
+                      ( <a href="/admin/user/{{g.user.id()}}" target="_blank">Bucket Vision</a> )
+                    {% elif g.user %}
+                      ( <a href="/admin/user/{{g.user.id()}}" target="_blank">Goal Owner</a> )
+                    {% endif %}
+                  </p>
+                  <p>
+                  	{{g.description}}
+                  </p>
+                  
+                  <div class="row">
+                    <div class="col s12 center">
+                      <button class="btn toggle-form"> <i class="fa fa-pencil"></i> Edit Goal</button>
+
+                      <div class="row transition post-form-container close">
+                        <div class="col s12">
+
+                            <form method="post" action="/admin/country_explorer/edit_goal/{{g.key.id()}}" class="country-explorer-form" data-form-type="edit" data-id="{{g.key.id()}}">
+
+                              {% if g.user.id() == curator_id %}
+
+                                <div class="row">
+                                  <div class="input-field col s12">
+                                    <input id="title" name="title" type="text" class="validate" value="{{g.title}}">
+                                    <label for="title">Title</label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="input-field col s12">
+                                    <textarea id="description" name="description" class="materialize-textarea">{{g.description}}</textarea>
+                                    <label for="description">Description</label>
+                                  </div>
+                                </div>
+
+                              {% endif %}
+
+                              <div class="row">
+                                <div class="input-field col s12">
+                                  <select id="country_{{g.key.id()}}" name="country">
+                                    {% if g.country_key %}
+                                      <option value="{{g.country_code}}">{{g.country_name}}</option>
+                                    {% else %}
+                                      <option value="" disabled selected>Choose a country</option>
+                                    {% endif %}
+                                    {% for country in countries %}
+                                      <option value="{{country['countryCode']}}">{{country['countryName']}}</option>
+                                    {% endfor %}
+                                  </select>
+                                  <label>Country</label>
+                                </div>
+                              </div>
+
+                              <!-- <p>
+                                <input type="checkbox" id="bv_post" name="bv_post" />
+                                <label for="bv_post">Post as Bucket Vision</label>
+                              </p> -->
+
+                              <div class="row" style="margin-top:1rem;">
+                                <div class="col s12 align-left">
+                                  <button class="btn"> <i class="fa fa-save"></i> save</button>
+                                </div>
+                              </div>
+
+                            </form>
+
+                          <form method="post" action="/admin/country_explorer/edit_goal/{{g.key.id()}}" class="country-explorer-form" data-form-type="delete" data-id="{{g.key.id()}}">
+                            <input type="hidden" name="delete" value="delete">
+                            <div class="row" style="margin-top:1rem;">
+                              <div class="col s12 align-right">
+                                <button class="btn red darken-2"> <i class="fa fa-trash"></i> Delete</button>
+                              </div>
+                            </div>
+
+                          </form>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            {% else %}
+
+            <div class="row">
+              <div class="col s12 center">
+                No goals here.
+              </div>
+            </div>
+
+            {% endif %}
+
+            {% if next_curs %}
+              <div class="row">
+                <div class="col s12">
+                  <a href="/admin/country_explorer/curated?cursor={{next_curs}}&country={{country_code}}">Next Page</a>
+                </div>
+              </div>
+            {% endif %}
+
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+  <script type="text/javascript">
+    $("body").on("click", ".toggle-form", function(){
+      var $this = $(this);
+      var $form = $this.next(".post-form-container");
+      console.log("hello: ", $form);
+      $form.toggleClass("close");
+      $form.toggleClass("open");
+    });
+
+    $("body").on("submit", ".country-explorer-form", function(e){
+      e.preventDefault();
+
+      var $form = $(this);
+      var action = $form.attr("action");
+      var method = $form.attr("method");
+
+      var form_type = $form.data("form-type");
+      var id = $form.data("id");
+      console.log("ID...: ", id);
+
+      $.post(action, $form.serialize(), function(data){
+        console.log(data);
+        var $button = $form.find("button");
+        var $button2 = $form.siblings("form").find("button");
+        if ( data["deleted"] ){
+          $button.text("deleted");
+          $button.prop("disabled", true);
+          $button2.prop("disabled", true);
+          console.log("ID: ", id);
+          setTimeout(function(){
+
+            $("#curated_goal_"+id).remove();
+
+          }, 1000);
+
+        }else{
+          $button.text("saved");
+          setTimeout(function(){
+            $button.html('<i class="fa fa-save"></i> save');
+          }, 2000);
+        };
+
+        /*if ( form_type == "delete" ){
+          $("curated_goal_"+id).remove();
+        };*/
+
+      }).fail(function(){
+        console.log("failed...");
+      });
+
+    });
+
+  </script>
+
+{% endblock %}
+
+
+
+
+
+
+

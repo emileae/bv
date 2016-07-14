@@ -1,0 +1,174 @@
+{% extends "base_temp.html" %}
+{% block main %}
+    
+    <div id="feed_container" class="row">
+    <div class="row feed_row">
+        <div class="large-2 small-2 columns feed_profile_card" data-user-id="{{goal_user.key.id()}}">
+            <div class="profile_img_container" style="background-image: url('{{goal_user.profile_img}}')">
+                        </div>
+                            <div class="user_profile_name">{{goal_user.name}}</div>
+                        <div class="text-center">
+                            <img class="diamond_line" src="/static/images/diamond.png" />
+                        </div>
+                            
+                            <div class="italic roboto text-center border-bottom pad_10px">
+                                {{goal_user.total_followers}} Followers
+                            </div>
+                            
+                            <div class="italic roboto text-center border-bottom pad_10px">
+                                {{goal_user.total_goals}} Goals
+                            </div>
+                            
+                            <div class="italic roboto text-center border-bottom pad_10px">
+                                {{goal_user.total_victories}} Victories
+                            </div>
+                            
+                            
+                            <div class="user_profile_text">
+                                <div>
+                                    <div class="score_diamond text-center">
+                                        <span class="score_number">{{goal_user.total_points}}</span>
+                                    </div>
+                                    <div class="total_score_text">TOTAL SCORE</div>
+                                </div>
+                                <div class="user_status_container">
+                                    <div class="user_status" style="
+                                    {% if goal_user.status == 'None' %}
+                                        background-image: url('/static/images/1_beginner.png')
+                                    {% elif goal_user.status == 'beginner' %}
+                                        background-image: url('/static/images/1_beginner.png')
+                                    {% elif goal_user.status == 'bronze' %}
+                                        background-image: url('/static/images/2_Bronze.png')
+                                    {% elif goal_user.status == 'silver' %}
+                                        background-image: url('/static/images/3_silver.png')
+                                    {% elif goal_user.status == 'gold' %}
+                                        background-image: url('/static/images/4_gold.png')
+                                    {% elif goal_user.status == 'supreme' %}
+                                        background-image: url('/static/images/5_supreme.png')
+                                    {% else %}
+                                        background-image: url('/static/images/1_beginner.png')
+                                    {% endif %}
+                                    
+                                    "></div>
+                                </div>
+                            </div>
+            <div class="bottom_img_dotted"></div>
+        </div>
+        <div class="large-10 small-10 columns feed_image_container" data-goal-id="{{goal.key.id()}}">
+            <div class="feed_goal_heading text-center">
+                {{goal.title}}
+            </div>
+            <div class="feed_cover_container">
+                {% if goal.achieved %}
+                        <div class="vic_feed_cover">
+                            <img id="feed_image_{{goal.key.id()}}" src="{{goal.image}}" class="feed_image" />
+                        </div>
+                {% else %}
+                    <img id="feed_image_{{goal.key.id()}}" src="{{goal.image}}" class="feed_image" />
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <div id="edit_goal_plus_btn" class="row">
+        <div class="large-6 medium-6 small-6 large-offset-2 medium-offset-2 small-offset-2 columns">
+            <span id="goal_form_toggle" class="icon-plus goal_form_toggle_on toggle_btn_orange"></span> Edit Goal
+        </div>
+    </div>
+    <div class="row">
+        <div id="image_edit" class="large-12 small-12 medium-12 columns transition">
+            <div id="goal_add_form_container" class="large-8 columns large-offset-2 transition">
+                <!-- <dl class="tabs tabs_2" data-tab>
+                  <dd class="active"><a href="#panel-img_url">Image Url</a></dd>
+                  <dd><a href="#panel-img_upload">Upload</a></dd>
+                </dl> -->
+
+                <!-- <div class="tabs-content"> -->
+
+                  <div class="content active" id="panel-img_url">
+                    <form id="goal_submit_form" method="post" action="/edit_title_description">
+                        <!-- <input id="edit_url" name="goal_img_url" type="text" placeholder="paste image url here." value="{{goal.image}}" /> -->
+                        <input id="edit_title" name="goal_title" type="text" placeholder="Goal Title" value="{{goal.title}}" />
+                        <textarea id="edit_description" name="goal_description" rows="4" cols="30" placeholder="describe your goal">{{goal.description}}</textarea>
+                        <input id="goal_id_td" name="goal_id" type="hidden" value="{{goal.key.id()}}" />
+                        
+                        <input id="title_description_submit" type="submit" value="Save" class="black_btn no_margin_left" />
+                    </form>
+                  </div>
+                  <div class="content" id="panel-img_upload">
+                    <form id="goal_img_upload_form" action="" method="post" enctype="multipart/form-data">
+                        <label>Upload a new Goal image (max size 3MB)</label>
+                        <input type="file" id="goal_img" name="goal_img" accept="image/*" />
+                        <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
+                        <input type="hidden" id="edit_goal_id" name="edit_goal_id" value="{{goal.key.id()}}" />
+                        <br>
+                        <div id="goal_img_submit" class="black_btn no_margin_left">Save</div>
+                    </form>
+                  </div>
+
+                <!-- </div> -->
+                
+            </div>
+        </div>
+    </div>
+
+    
+    {% if goal.achieved %}
+        <div class="row">
+            <div id="goal_container_front" class="large-12 small-12 columns">
+                <div id="goal_list">
+                    {% for v in goal.vic_pics %}
+                        <div id="edit_goal_{{loop.index}}" class="item">
+                            <img id="vic_pic_{{loop.index}}" src="{{v}}" class="goal_card_img" />
+                            <div class="goal_card_text_edit_goal row text-center">
+                                <!--<div id="make_cover_{{loop.index}}" class="make_cover_img blue_btn" data-img-url="{{v}}" data-goal-id="{{goal.key.id()}}" data-loop-index="{{loop.index}}">
+                                Make Cover Image
+                                </div>-->
+                                <div id="make_cover_{{loop.index}}" class="like_view_btn make_cover_img" data-img-url="{{v}}" data-goal-id="{{goal.key.id()}}" data-loop-index="{{loop.index}}">
+                                    <!--<i class="li_trash"></i>--> Make Cover
+                                </div>
+                                
+                                <!--<div id="delete_{{loop.index}}" class="delete_media blue_btn" data-img-url="{{v}}" data-goal-id="{{goal.key.id()}}" data-loop-index="{{loop.index}}">
+                                Delete
+                                </div>-->
+                                <div id="delete_{{loop.index}}" class="like_view_btn delete_media" data-img-url="{{v}}" data-goal-id="{{goal.key.id()}}" data-loop-index="{{loop.index}}">
+                                    <span class="l_v_icon border-right">
+                                        <svg version="1.1"
+                                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                             x="0px" y="0px" width="253px" height="289.1px" viewBox="0 0 253 289.1" enable-background="new 0 0 253 289.1"
+                                             xml:space="preserve">
+                                        <defs>
+                                        </defs>
+                                        <g>
+                                            <path fill="#363435" d="M161.1,256.6c0,0.2,0,0.3,0,0.5c0-0.1,0-0.2,0-0.4C161.2,256.7,161.1,256.6,161.1,256.6z"/>
+                                            <path fill="#363435" d="M126.5,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9c-5,0-9,4-9,9v126.4C117.5,248.8,121.6,252.9,126.5,252.9z"/>
+                                            <path fill="#363435" d="M171.7,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9s-9,4-9,9v126.4C162.7,248.8,166.7,252.9,171.7,252.9z"/>
+                                            <path fill="#363435" d="M81.4,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9s-9,4-9,9v126.4C72.4,248.8,76.4,252.9,81.4,252.9z"/>
+                                            <path fill="#363435" d="M225.9,45.2h-18.1V18.1c0-10-8.1-18.1-18.1-18.1H63.3c-10,0-18.1,8.1-18.1,18.1v27.1H27.1
+                                                C12.1,45.2,0,57.3,0,72.3v18.1h27.1V262c0,15,12.1,27.1,27.1,27.1h144.5c15,0,27.1-12.1,27.1-27.1V90.3H253V72.2
+                                                C253,57.3,240.9,45.2,225.9,45.2z M63.3,18.1h126.5v27.1H63.3V18.1z M207.8,262c0,5-4.1,9-9,9H54.3c-5,0-9-4.1-9-9V90.3h162.6V262
+                                                H207.8z M234.9,72.3v9H18.2v-9l0,0c0-5,4.1-9,9-9h198.7C230.9,63.3,234.9,67.3,234.9,72.3L234.9,72.3z"/>
+                                        </g>
+                                        </svg>
+                                    </span>
+                                    <!--<i class="li_trash"></i>--> Delete
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+    
+    <script type="text/javascript">
+        window.onload=resize_feed_image;
+        window.onload=size_profile_img_container
+    </script>
+    
+    
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base_temp.html" %}
+{% block main %}
+<div class="row">
+    <div class="large-6 large-offset-3 small-12 columns">
+        <h2>{{goal.title}}</h2>
+        <dl class="tabs tabs_3" data-tab>
+          <!-- <dd class="active"><a href="#panel-img_url">Image Url</a></dd> -->
+          <dd><a href="#panel-img_upload">Upload</a></dd>
+          <dd><a href="#panel-video_embed">Video</a></dd>
+        </dl>
+        <div class="tabs-content">
+          <<!-- div class="content active transition" id="panel-img_url">
+            <form id="vic_img_url_form" method="post" action="/add_vic_img_url">
+                <input id="vic_img_url" name="vic_img_url" type="text" placeholder="paste image url here." />
+                <input type="hidden" id="vic_img_url_goal_id" name="vic_img_url_goal_id" value="{{goal.key.id()}}" />
+                <input type="submit" value="Save" class="button tiny" />
+            </form>
+          </div> -->
+          <div class="content active transition" id="panel-img_upload">
+            <form id="victory_img_upload_form" action="" method="post" enctype="multipart/form-data">
+                <label>Upload your Victory image (max size 3MB)</label>
+                <input type="file" id="vic_img" name="vic_img" accept="image/*" />
+                <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
+                <input type="hidden" id="goal_id" name="goal_id" value="{{goal.key.id()}}" />
+                
+                <div id="victory_img_submit" class="button tiny">Upload</div>
+            </form>
+          </div>
+          <div class="content" id="panel-video_embed">
+            <form id="goal_submit_video_embed_form" method="post" action="/add_vic_vid">
+                <input id="goal_video_embed" name="goal_video_embed" type="text" placeholder="paste Youtube video URL here." />
+                <input type="hidden" id="vid_goal_id" name="vid_goal_id" value="{{goal.key.id()}}" />
+                
+                <input type="submit" value="Save" class="button tiny" />
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div id="goal_container_front" class="large-12 columns">
+        <div id="goal_list">
+            {% for v in vic_media %}
+                {% if v["type"] == "pic" %}
+                    <div id="edit_goal_{{loop.index}}" class="item">
+                        <img src="{{v['url']}}" />
+                        <div class="goal_card_text_edit_goal row text-center">
+                            <div id="delete_{{loop.index}}" class="like_view_btn delete_media" data-img-url="{{v['url']}}" data-goal-id="{{goal.key.id()}}" data-loop-index="{{loop.index}}">
+                                <span class="l_v_icon border-right">
+                                    <svg version="1.1"
+                                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                         x="0px" y="0px" width="253px" height="289.1px" viewBox="0 0 253 289.1" enable-background="new 0 0 253 289.1"
+                                         xml:space="preserve">
+                                    <defs>
+                                    </defs>
+                                    <g>
+                                        <path fill="#363435" d="M161.1,256.6c0,0.2,0,0.3,0,0.5c0-0.1,0-0.2,0-0.4C161.2,256.7,161.1,256.6,161.1,256.6z"/>
+                                        <path fill="#363435" d="M126.5,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9c-5,0-9,4-9,9v126.4C117.5,248.8,121.6,252.9,126.5,252.9z"/>
+                                        <path fill="#363435" d="M171.7,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9s-9,4-9,9v126.4C162.7,248.8,166.7,252.9,171.7,252.9z"/>
+                                        <path fill="#363435" d="M81.4,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9s-9,4-9,9v126.4C72.4,248.8,76.4,252.9,81.4,252.9z"/>
+                                        <path fill="#363435" d="M225.9,45.2h-18.1V18.1c0-10-8.1-18.1-18.1-18.1H63.3c-10,0-18.1,8.1-18.1,18.1v27.1H27.1
+                                            C12.1,45.2,0,57.3,0,72.3v18.1h27.1V262c0,15,12.1,27.1,27.1,27.1h144.5c15,0,27.1-12.1,27.1-27.1V90.3H253V72.2
+                                            C253,57.3,240.9,45.2,225.9,45.2z M63.3,18.1h126.5v27.1H63.3V18.1z M207.8,262c0,5-4.1,9-9,9H54.3c-5,0-9-4.1-9-9V90.3h162.6V262
+                                            H207.8z M234.9,72.3v9H18.2v-9l0,0c0-5,4.1-9,9-9h198.7C230.9,63.3,234.9,67.3,234.9,72.3L234.9,72.3z"/>
+                                    </g>
+                                    </svg>
+                                </span>
+                                 Delete
+                            </div>
+                        </div>
+                    </div>
+                {% elif v["type"] == "vid" %}
+                    <div id="edit_goal_{{loop.index}}" class="item">
+                        <img src="http://img.youtube.com/vi/{{v['url']}}/hqdefault.jpg" />
+                        <span class="video_icon"><img src="/static/images/video_triangle.png" width="30px" /></span>
+                        <div class="goal_card_text_edit_goal row text-center">
+                            <div id="delete_{{loop.index}}" class="like_view_btn delete_media" data-img-url="{{v['url']}}" data-goal-id="{{goal.key.id()}}" data-loop-index="{{loop.index}}">
+                                <span class="l_v_icon border-right">
+                                    <svg version="1.1"
+                                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                         x="0px" y="0px" width="253px" height="289.1px" viewBox="0 0 253 289.1" enable-background="new 0 0 253 289.1"
+                                         xml:space="preserve">
+                                    <defs>
+                                    </defs>
+                                    <g>
+                                        <path fill="#363435" d="M161.1,256.6c0,0.2,0,0.3,0,0.5c0-0.1,0-0.2,0-0.4C161.2,256.7,161.1,256.6,161.1,256.6z"/>
+                                        <path fill="#363435" d="M126.5,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9c-5,0-9,4-9,9v126.4C117.5,248.8,121.6,252.9,126.5,252.9z"/>
+                                        <path fill="#363435" d="M171.7,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9s-9,4-9,9v126.4C162.7,248.8,166.7,252.9,171.7,252.9z"/>
+                                        <path fill="#363435" d="M81.4,252.9c5,0,9-4,9-9V117.4c0-5-4-9-9-9s-9,4-9,9v126.4C72.4,248.8,76.4,252.9,81.4,252.9z"/>
+                                        <path fill="#363435" d="M225.9,45.2h-18.1V18.1c0-10-8.1-18.1-18.1-18.1H63.3c-10,0-18.1,8.1-18.1,18.1v27.1H27.1
+                                            C12.1,45.2,0,57.3,0,72.3v18.1h27.1V262c0,15,12.1,27.1,27.1,27.1h144.5c15,0,27.1-12.1,27.1-27.1V90.3H253V72.2
+                                            C253,57.3,240.9,45.2,225.9,45.2z M63.3,18.1h126.5v27.1H63.3V18.1z M207.8,262c0,5-4.1,9-9,9H54.3c-5,0-9-4.1-9-9V90.3h162.6V262
+                                            H207.8z M234.9,72.3v9H18.2v-9l0,0c0-5,4.1-9,9-9h198.7C230.9,63.3,234.9,67.3,234.9,72.3L234.9,72.3z"/>
+                                    </g>
+                                    </svg>
+                                </span>
+                                 Delete
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

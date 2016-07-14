@@ -1,0 +1,146 @@
+<!--<h3>Profile</h3>
+<div>Followers: {{user_profile.total_followers}}</div>
+<div>Victories: {{user_profile.total_victories}}</div>
+<div>Goals: {{user_profile.total_goals}}</div>
+<div>Email: {{user_profile.email}}</div>
+<div>Points: {{user_profile.total_points}}</div>
+<div class="button tiny follow_user {% if already_following %}hidden{% endif %}" data-user-id="{{user_profile.key.id()}}">Follow</div>
+<div class="button tiny unfollow_user {% if not already_following %}hidden{% endif %}" data-user-id="{{user_profile.key.id()}}">Unfollow</div>-->
+
+<div class="row feed_row">
+        
+        <div class="large-2 small-2 columns user_profile_modal feed_profile_card" data-user-id="{{user_profile.key.id()}}">
+            <div class="profile_img_container" style="background-image: url('{{user_profile.profile_img}}')">
+            </div>
+            <script>
+                size_profile_img_container();
+            </script>
+                <div class="user_profile_name">{{user_profile.name}}</div>
+            <div class="text-center">
+                <img class="diamond_line" src="/static/images/diamond.png" />
+            </div>
+                
+                <div class="italic roboto text-center border-bottom pad_10px">
+                    {{user_profile.total_followers}} Followers
+                </div>
+                
+                <div class="italic roboto text-center border-bottom pad_10px">
+                    {{user_profile.total_goals}} Goals
+                </div>
+                
+                <div class="italic roboto text-center border-bottom pad_10px">
+                    {{user_profile.total_victories}} Victories
+                </div>
+                
+                
+                <div class="user_profile_text">
+                    <div>
+                        <div class="score_diamond text-center">
+                            <span class="score_number">{{user_profile.total_points}}</span>
+                        </div>
+                        <div class="total_score_text">TOTAL SCORE</div>
+                    </div>
+                    
+                    <div class="user_status_container">
+                        <div class="user_status" style="
+                        {% if user_profile.status == 'None' %}
+                            background-image: url('/static/images/1_beginner.png')
+                        {% elif user_profile.status == 'beginner' %}
+                            background-image: url('/static/images/1_beginner.png')
+                        {% elif user_profile.status == 'bronze' %}
+                            background-image: url('/static/images/2_Bronze.png')
+                        {% elif user_profile.status == 'silver' %}
+                            background-image: url('/static/images/3_silver.png')
+                        {% elif user_profile.status == 'gold' %}
+                            background-image: url('/static/images/4_gold.png')
+                        {% elif user_profile.status == 'supreme' %}
+                            background-image: url('/static/images/5_supreme.png')
+                        {% else %}
+                            background-image: url('/static/images/1_beginner.png')
+                        {% endif %}
+                        
+                        "></div>
+                    </div>
+                </div>
+            <div class="bottom_img_dotted"></div>
+        </div>
+        
+        <div class="large-10 small-10 columns">
+            <div id="user_profile_modal_about" class="bv_panel">
+                <h5>About me</h5>
+                <p>
+                    {% if user_profile.description %}
+                        {{user_profile.description}}
+                    {% else %}
+                        I'm on Bucket Vision! I also need to get to filling out my profile.
+                    {% endif %}
+                </p>
+            </div>
+            
+            <div class="bv_panel">
+                <div id="latest_goals_user_modal">
+                    {% if last_3_goals %}
+                        {% for l in last_3_goals %}
+                            <div class="user_profile_latest_goals">
+                                <div style="background-image:url('{{l.image}}')" class="user_profile_latest_goal_img">
+                                </div>
+                                <div class="goal_description">
+                                    <p>
+                                        {{l.description}}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                        {% endfor %}
+                    {% else %}
+                        <div class="user_profile_latest_goal">
+                            <div style="background-image:url('{{last_goal.image}}')" class="user_profile_latest_goal_img">
+                            </div>
+                            <div class="goal_link"><!-- goal_description -->
+                                <a href="/goals/{{user_profile.key.id()}}"><div class="button blue tiny expand no_margin">{{user_profile.name}}'s Goals</div></a>
+                            </div>
+                        </div>
+                        <div class="user_profile_latest_victory">
+                            <div style="background-image:url('{{last_victory.image}}')" class="user_profile_latest_goal_img">
+                            </div>
+                            <div class="victory_link">
+                                <a href="/victories/{{user_profile.key.id()}}"><div class="button blue tiny expand no_margin">{{user_profile.name}}'s Victories</div></a>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+            
+            <div class="bv_clear_panel">
+            {% if not user_obj %}
+                <ul class="large-block-grid-2 medium-block-grid-2 small-block-grid-2">
+                    <li>
+                        <a href="/"><div class="button blue tiny expand">Explore Bucket Vision</div></a>
+                    </li>
+                    <li>
+                        <a href="/signup"><div class="button orange tiny expand">Join Bucket Vision</div></a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="large-block-grid-2 medium-block-grid-2 small-block-grid-2">
+                    <li>
+                        <!--{% if user_obj %}
+                        <div class="margin-top-1em">-->
+                        <div class="button orange tiny follow_user {% if already_following %}hidden{% endif %} expand no_margin" data-user-id="{{user_profile.key.id()}}">Follow</div>
+                        <div class="button orange tiny unfollow_user {% if not already_following %}hidden{% endif %} expand no_margin" data-user-id="{{user_profile.key.id()}}">Unfollow</div>
+                        <!--</div>
+                    {% endif %}-->
+                    </li>
+                    <li>
+                        <a href="/"><div class="button blue tiny expand">Explore Bucket Vision</div></a>
+                    </li>
+                </ul>
+            {% endif %}
+            </div>
+            
+        </div>
+    </div>
+
+
+

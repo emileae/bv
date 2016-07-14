@@ -1,0 +1,213 @@
+{% extends "cms.html" %}
+
+{% block main %}
+
+	<div class="row s12">
+		<div class="col s12">
+
+            <h5>Country Explorer</h5>
+            <h6>Goals</h6>
+
+            <div class="row">
+              <div class="col s12 center">
+                <form method="get" action="/admin/country_explorer/goals">
+                  <div class="row">
+                      <div class="input-field col s12 m6 offset-m3">
+                        <input id="search_goals" name="name_email" type="text" class="validate" placeholder="Search for a username or email">
+                        <label for="search_goals">Username / Email</label>
+                      </div>
+                    </div>
+
+                    <div class="row" style="margin-top:1rem;">
+                      <div class="col s12 align-left">
+                        <button class="btn"> <i class="fa fa-search"></i> Search</button>
+                      </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+
+            {% if goals %}
+              {% for g in goals %}
+              <div id="goal_{{g.key.id()}}" class="row">
+                <div class="col card s12 m6 offset-m3 blue-grey darken-1">
+                  <div class="card-image white-text">
+                    <img src="{{g.image}}">
+                  </div>
+                  <div class="card-content white-text">
+                    <span class="card-title">{{g.title}}</span>
+                    <p>
+                      {% if g.user.id() == curator_id %}
+                        <a href="/admin/user/{{g.user.id()}}" target="_blank">Bucket Vison</a>
+                      {% else %}
+                        <a href="/admin/user/{{g.user.id()}}" target="_blank">Goal Owner</a>
+                      {% endif %}
+                    </p>
+                    <p>
+                    	{{g.description}}
+                    </p>
+                    
+                    <div class="row">
+                      <div class="col s12 center">
+                        <!-- <button id="add_normal_goal_{{g.key.id()}}" class="btn add-goal" data-goal-id="{{g.key.id()}}"> 
+                          <i class="fa fa-globe"></i> <span id="country_explorer_add_text_{{g.key.id()}}">Add to Country Explorer</span>
+                        </button> -->
+
+                        <div class="row">
+                          <div class="col s12">
+                            <form id="form_{{g.key.id()}}" data-id="{{g.key.id()}}" method="post" action="/admin/country_explorer/add_goal/{{g.key.id()}}" class="country-explorer-form">
+
+                              <p style="margin-top:1rem;">
+                                <input type="checkbox" id="country_explorer_toggle_button_{{g.key.id()}}" data-id="{{g.key.id()}}" class="toggle-form" name="bv_post" value="bv_goal" />
+                                <label for="country_explorer_toggle_button_{{g.key.id()}}">Post as Bucket Vision</label>
+                              </p>
+
+                              <p id="error_message_{{g.key.id()}}" style="color: red;">
+
+                              </p>
+
+                              <div class="row">
+                                <div class="input-field col s12">
+                                  <select id="country_{{g.key.id()}}" name="country">
+                                    <option value="" disabled selected>Choose a country</option>
+                                    {% for country in countries %}
+                                      <option value="{{country['countryCode']}}">{{country['countryName']}}</option>
+                                    {% endfor %}
+                                  </select>
+                                  <label>Country</label>
+                                </div>
+                              </div>
+
+                              <div id="curated_form_container_{{g.key.id()}}" class="transition post-form-container close">
+
+                                <div class="row">
+                                  <div class="input-field col s12">
+                                    <input id="title_{{g.key.id()}}" name="title" type="text" class="validate" value="{{g.title}}">
+                                    <label for="title_{{g.key.id()}}">Title</label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="input-field col s12">
+                                    <textarea id="description_{{g.key.id()}}" name="description" class="materialize-textarea">{{g.description}}</textarea>
+                                    <label for="description_{{g.key.id()}}">Description</label>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                              <!-- <input type="hidden" id="post_as_bv_{{g.key.id()}}" name="bv_post" value="bv_goal" /> -->
+
+                              <div class="row" style="margin-top:1rem;">
+                                <div class="col s12 align-left">
+                                  <button class="btn"> <i class="fa fa-plus"></i> Add</button>
+                                </div>
+                              </div>
+
+                            </form>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="row">
+                <div class="col s12 center">
+                  <p>No goals found</p>
+                  <p><a href="/admin/country_explorer/goals">Search all goals</a></p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if next_curs %}
+              <div class="row">
+                <div class="col s12">
+                  <a href="/admin/country_explorer/goals?cursor={{next_curs}}&name_email={{name_email}}">Next Page</a>
+                </div>
+              </div>
+            {% endif %}
+
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+  <script type="text/javascript">
+    $("body").on("click", ".toggle-form", function(){
+      var $this = $(this);
+      var $form = $this.next(".post-form-container");
+
+      console.log( "checked: ", $this.is(":checked") );
+
+      var id = $this.data("id");
+
+      var $form = $("#curated_form_container_"+id);
+      $form.toggleClass("close");
+      $form.toggleClass("open");
+    });
+
+    /*$("body").on("click", ".add-goal", function(){
+      var $this = $(this);
+      var goal_id = $this.data("goal-id");
+
+      $.post("/admin/country_explorer/add_normal_goal", {"goal_id": goal_id}, function(data){
+        console.log(data);
+
+        var goal_id = data["goal_id"];
+        $("#add_normal_goal_"+goal_id).removeClass("add-goal");
+        $("#country_explorer_toggle_button_"+goal_id).hide();
+        $("#country_explorer_add_text_"+goal_id).text("Added");
+
+      }).fail(function(){
+        console.log("failed...");
+      });
+
+    });*/
+
+    $("body").on("submit", ".country-explorer-form", function(e){
+      e.preventDefault();
+
+      var $form = $(this);
+      var id = $form.data("id");
+      var action = $form.attr("action");
+      var method = $form.attr("method");
+
+      var country = $("#country_"+id).val();
+      if ( !country ){
+        $("#error_message_"+id).text("please include a country.")
+      }else{
+        $.post(action, $form.serialize(), function(data){
+          var goal_id = data["goal_id"];
+          //$("#country_explorer_toggle_button_"+goal_id).trigger("click");
+          //$("#country_explorer_toggle_button_"+goal_id).removeClass("toggle-form");
+          if( $("#curated_form_container_"+id).hasClass("open") ){
+            $("#curated_form_container_"+id).removeClass("open");
+            $("#curated_form_container_"+id).addClass("close");
+          }
+          //$("#country_explorer_add_text_"+goal_id).text("Added");
+          $("#form_"+id+" :button").prop("disabled", true);
+          $("#form_"+id+" :button").text("Added");
+        }).fail(function(){
+          console.log("failed...");
+        });
+      };
+
+    });
+
+  </script>
+
+{% endblock %}
+
+
+
+
+
+
+

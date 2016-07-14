@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta property="og:url" content="http://bucketvision.com"/>
+    <meta property="og:title"           content="Bucket Vision" /> 
+    <meta property="og:description" content="Join Bucket Vision, a place to share your Visions and Victories" />
+    
+    <meta property="og:type"            content="website" /> 
+    <meta property="og:image" content="http://bucketvision.com/static/images/bucketvision_title_fb.png"/>
+    
+    <title>Bucket Vision</title>
+
+    <!-- If you are using CSS version, only link these 2 files, you may add app.css to use for your overrides if you like. -->
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/foundation/foundation.min.css">
+
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- Foundicons -->
+    <link href='/static/css/foundation-icons.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Roboto:400,300italic,700italic,700' rel='stylesheet' type='text/css'>
+    
+    <link rel="stylesheet" href="/static/css/nprogress.css">
+
+    <style>
+        
+    </style>
+
+    <script src="/static/foundation/custom.modernizr.js"></script>
+    <script src="/static/js/nprogress.js"></script>
+    
+  </head>
+  <body style="background-image: url('/static/images/BG1.jpg'); background-size: cover; background-repeat: no-repeat;">
+    <div id="front_page">
+        {% block main %}
+            
+            <div id="front_logo_container" class="row">
+                <div id="bv_logo" class="large-4 large-offset-4 medium-12 small-12 columns text-center">
+                    <img src="/static/images/Logo.png" />
+                </div>
+            </div>
+            <div id="bv_description" class="row roboto">
+                <div id="bv_description_column" class="large-4 large-offset-4 medium-12 small-12 columns text-center">
+                    <div id="site_description" class="transition"
+                        {% if error %}
+                            style="left:0%"
+                        {% elif errors %}
+                            style="left:-200%"
+                        {% endif %}
+                    >
+                        <div id="panel_login" class="">
+                        </div>
+                        <div id="panel_description" class="roboto">
+                            {% block text %}
+                                Bucket Vision is a community of like minded
+                                people that live to DO and SHARE.
+                                To INSPIRE and be INSPIRED.
+                            {% endblock %}
+                        </div>
+                        <div id="panel_register">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="register" class="row hidden">
+                <div id="register_block">
+                    <div id="register_header" class="row text-center roboto no_margin">Sign Up</div>
+                    <div class="row text-center register_panel no_margin">
+                        <form method="post" action="/register" class="no_margin">
+
+                            <input type="email" id="email" name="email" placeholder="Email" class="roboto"></input>
+
+                            <input type="password" id="password" name="password" placeholder="Password"></input>
+
+                            <input type="password" id="verify_password" name="verify_password" placeholder="Confirm Password"></input>
+                            
+                            <div id="register_checkbox" class="roboto">
+                                <input type="checkbox" id="terms" name="terms" /><span class="roboto"> I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a></span>
+                            </div>
+                            
+                            <input type="submit" value="Sign up" class="black_btn"></input>
+                            
+                            {% if errors %}
+                                {% if errors["error_verify"] %}
+                                    <small class="error">{{errors["error_verify"]}}</small>
+                                {% elif errors["error_email"] %}
+                                    <small class="error">{{errors["error_email"]}}</small>
+                                {% elif errors["error_password"] %}
+                                    <small class="error">{{errors["error_password"]}}</small>
+                                {% elif errors["error_unique"] %}
+                                    <small class="error">{{errors["error_unique"]}}</small>
+                                {% endif %}
+                            {% endif %}
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="login" class="row hidden">
+                <div id="login_block">
+                    <div id="login_header" class="row text-center roboto no_margin">Login</div>
+                    <div class="row text-center register_panel no_margin">
+                        <form method="post" action="/login" class="no_margin">
+
+                            <input type="email" id="email" name="email" placeholder="Email" class="roboto"></input>
+                            
+                            <input type="password" id="password" name="password" placeholder="Password"></input>
+                            
+                            <div id="register_checkbox">
+                                <a href="#" data-reveal-id="forgotPasswordModal" class="roboto">Forgot Password?</a>
+                            </div>
+                            
+                            <input type="submit" value="Login" class="black_btn"></input>
+                            
+                            {% if error %}
+                                <small class="error">{{error}}</small>
+                            {% endif %}
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="login_buttons" class="row">
+                <div class="large-12 large-offset-12 columns text-center">
+                    <div class="roboto">
+                        <div id="login_toggle" class="login_signup_btn no_select">Login</div> <div id="register_toggle" class="login_signup_btn no_select">Sign Up</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="large-4 large-offset-4 columns hidden">
+                    <form method="post" action="/login">
+                        <fieldset>
+                            {% if error %}
+                                <small class="error">{{error}}</small>
+                            {% endif %}
+                            <label>Email</label>
+                            <input type="email" id="email" name="email"></input>
+                            <label>Password</label>
+                            <input type="password" id="password" name="password"></input>
+                            
+                            <input type="submit" value="Login" class="button"></input>
+                            
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            
+        {% endblock %}
+    </div>
+    
+    <div id="hiw_link" class="text-center bottom_band_hiw fixed_bottom roboto">
+        <a href="/how_it_works" target="_blank" class="">How it Works</a>
+    </div>
+    
+    <div id="forgotPasswordModal" class="reveal-modal" data-reveal>
+        <div id="user_profile_container">
+            <form id="forgot_password_form" action="/forgot_password" method="post">
+                <label>Please Provide the email you registered with</label>
+                <input type="email" id="recovery_email" name="recovery_email" />
+                <input type="submit" value="Send new Password" class="black_btn" />
+            </form>
+            <a id="redirect_after_delete" href="/"></a>
+        </div>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/foundation/foundation.min.js"></script>
+    <script src="/static/js/masonry-min.js"></script>
+    <script src="/static/js/imagesLoaded-min.js"></script>
+    <!--<script src="/static/js/page_script.js"></script>-->
+    <script src="/static/js/page_script_min.js"></script>
+    
+    
+    <script type="text/javascript">
+        $(document).foundation();
+    </script>
+    
+    <script type="text/javascript">
+        var random_num = Math.floor((Math.random() * 4) + 1);
+        $("body").css("background-image", "url(/static/images/BG"+random_num+".jpg)");
+        if( random_num == 2 ){
+            $("body").css( "background-position", "50% 100%");
+        }else{
+            $("body").css("background-position", "center");
+        };
+    </script>
+    
+  </body>
+</html>

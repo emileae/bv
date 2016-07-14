@@ -1,0 +1,165 @@
+{% extends "base_temp.html" %}
+{% block main %}
+    <div class="row feed_row_settings">
+        
+    <div class="large-2 small-2 columns user_profile_modal feed_profile_card" data-user-id="{{user_obj.key.id()}}">
+        <div class="profile_img_container" style="background-image: url('{{user_obj.profile_img}}')">
+        </div>
+        <script>
+            size_profile_img_container();
+        </script>
+            <div class="user_profile_name">{{user_obj.name}}</div>
+        <div class="text-center">
+            <img class="diamond_line" src="/static/images/diamond.png" />
+        </div>
+            
+            <div class="italic roboto text-center border-bottom pad_10px">
+                {{user_obj.total_followers}} Followers
+            </div>
+            
+            <div class="italic roboto text-center border-bottom pad_10px">
+                {{user_obj.total_goals}} Goals
+            </div>
+            
+            <div class="italic roboto text-center border-bottom pad_10px">
+                {{user_obj.total_victories}} Victories
+            </div>
+            
+            
+            <div class="user_profile_text">
+                <div>
+                    <div class="score_diamond text-center">
+                        <span class="score_number">{{user_obj.total_points}}</span>
+                    </div>
+                    <div class="total_score_text">TOTAL SCORE</div>
+                </div>
+                <div class="user_status_container">
+                    <div class="user_status" style="
+                    {% if user_obj.status == 'None' %}
+                        background-image: url('/static/images/1_beginner.png')
+                    {% elif user_obj.status == 'beginner' %}
+                        background-image: url('/static/images/1_beginner.png')
+                    {% elif user_obj.status == 'bronze' %}
+                        background-image: url('/static/images/2_Bronze.png')
+                    {% elif user_obj.status == 'silver' %}
+                        background-image: url('/static/images/3_silver.png')
+                    {% elif user_obj.status == 'gold' %}
+                        background-image: url('/static/images/4_gold.png')
+                    {% elif user_obj.status == 'supreme' %}
+                        background-image: url('/static/images/5_supreme.png')
+                    {% else %}
+                        background-image: url('/static/images/1_beginner.png')
+                    {% endif %}
+                    
+                    "></div>
+                </div>
+            </div>
+        <div class="bottom_img_dotted"></div>
+    </div>
+        
+        
+        <div class="large-10 small-10 columns text-center">
+        <div id="settings_main_forms">
+            
+            <div class="bv_panel">
+            
+            <h1>Profile Settings</h1>
+            
+            <dl class="accordion" data-accordion="myAccordionGroup">
+                <dd>
+                    <a href="#panel1c">Name and Description</a>
+                    <div id="panel1c" class="content">
+                        <form id="profile_settings_form" action="/settings" method="post" class="transition settings_form">
+                            <input type="text" id="user_name" name="user_name" value="{% if user_obj.name %}{{user_obj.name}}{% endif %}" placeholder="Type your display name here" />
+                            {% if user_obj.description %}
+                                <textarea id="user_description" name="user_description" placeholder="Say something about yourself." rows="3">{{user_obj.description}}</textarea>
+                            {% else %}
+                                <textarea id="user_description" name="user_description" placeholder="Say something about yourself." rows="3"></textarea>
+                            {% endif %}
+                            <!--<input type="submit" value="Save Changes" class="button tiny" />-->
+                            <div id="profile_settings_submit" class="black_btn">Save Changes</div>
+                        </form>
+                    </div>
+                </dd>
+                <dd>
+                    <a href="#panel2c">Profile Image</a>
+                    <div id="panel2c" class="content">
+                       {% if not user_obj.profile_img %}
+                            <form id="profile_img_form" action="" method="post" enctype="multipart/form-data" class="settings_form">
+                                <label>Upload your profile image (max size 500kb)</label>
+                                <input type="file" id="user_profile_img" name="user_profile_img" accept="image/*" />
+                                <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
+                                <div id="profile_img_submit" class="black_btn">Upload Profile Image</div>
+                                <!--<input type="submit" value="Upload" class="button tiny" />-->
+                            </form>
+                        {% else %}
+                            <form id="profile_img_form" action="" method="post" enctype="multipart/form-data" class="hidden settings_form">
+                                <label>Upload your profile image (max size 500kb)</label>
+                                <input type="file" id="user_profile_img" name="user_profile_img" accept="image/*" />
+                                <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
+                                <div id="profile_img_submit" class="black_btn">Upload Profile Image</div>
+                                <!--<input type="submit" value="Upload" class="button tiny" />-->
+                            </form>
+                            <img src="{{user_obj.profile_img}}" class="profile_image_preview" width="100px"/>
+                            <a id="change_profile_img" href="#">Change Profile Image</a>
+                        {% endif %}
+                    </div>
+                </dd>
+                <dd>
+                    <a href="#panel3c">Change Password</a>
+                    <div id="panel3c" class="content">
+                        <form id="change_pw_form" action="/change_password" method="post" class="settings_form">
+                            <label>Change Password</label>
+                            <span id="change_pw_message" class="form_feedback"></span>
+                            <input type="password" id="old_password" name="old_password" placeholder="Old password"/>
+                            <input type="password" id="new_password" name="new_password" placeholder="New password"/>
+                            <input type="password" id="repeat_password" name="repeat_password" placeholder="Repeat new password"/>
+                            <input type="submit" value="Change" class="black_btn"/>
+                        </form>
+                    </div>
+                </dd>
+                <dd>
+                    <a href="#panel4c">Change Email</a>
+                    <div id="panel4c" class="content">
+                        <form id="change_email_form" action="/change_email" method="post" class="settings_form">
+                            <label>Change Email</label>
+                            <span id="change_email_message" class="form_feedback"></span>
+                            <input type="password" id="password" name="password" placeholder="Password"/>
+                            <input type="email" id="old_email" name="old_email" placeholder="Old Email"/>
+                            <input type="email" id="new_email" name="new_email" placeholder="New Email"/>
+                            <input type="submit" value="Change" class="black_btn"/>
+                        </form>
+                    </div>
+                </dd>
+                <dd>
+                    <a href="#panel5c">Invite Facebook Friends</a>
+                    <div id="panel5c" class="content">
+                        <div class="black_btn invite_fb_friend">Invite facebook friends</div>
+                    </div>
+                </dd>
+                <dd>
+                    <a href="#panel6c">Search Friends on Bucket Vision</a>
+                    <div id="panel6c" class="content">
+                        <form id="user_search_form" action="/search_users" method="get" class="settings_form">
+                            <label>Search friends on Bucket Vision</label>
+                            <input type="email" id="user_email" name="user_email" class="inline search_input" placeholder="Type your friend's email" /> <span id="user_search_submit" class="icon_btn"><i class="fi-magnifying-glass inline"></i></span>
+                        </form>
+                        <div id="search_results" class="hidden">
+                            <ul>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </dd>
+                <dd>
+                    <a href="#panel7c">Delete Bucket Vision Account</a>
+                    <div id="panel7c" class="content">
+                        <div id="delete_account" class="black_btn">Delete My Account</div>
+                    </div>
+                </dd>
+            </dl>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

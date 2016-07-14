@@ -1,0 +1,12 @@
+<div class="vic_feed_thumbs">
+    <div class="vic_thumb feed_img_layout_4 feed_img_1" style="background-image: url('{{g.image}}'), url('')"></div>
+    {% for v in g.vic_pics %}
+        {% if loop.index == 1 %}
+            <div class="vic_thumb feed_img_layout_4 feed_img_2" style="background-image: url('{{v}}'), url('')"></div>
+        {% elif loop.index == 2 %}
+            <div class="vic_thumb feed_img_layout_4 feed_img_3" style="background-image: url('{{v}}'), url('')"></div>
+        {% elif loop.index == 3 %}
+            <div class="vic_thumb feed_img_layout_4 feed_img_4" style="background-image: url('{{v}}'), url('')"></div>
+        {% endif %}
+    {% endfor %}
+</div>

@@ -1,0 +1,43 @@
+{% extends "base_temp.html" %}
+{% block main %}
+<div class="row">
+    <div class="large-12 medium-12 small-12 columns text-center">
+        <h2>{{goal.title}}</h2>
+        <div class="goal_page_description word-break">
+            {{goal.description}}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div id="goal_container_front" class="large-12 columns">
+        <div id="goal_list">
+            {% for v in vic_media %}
+                {% if v["type"] == "pic" %}
+                    <div id="edit_goal_{{loop.index}}" class="item media_modal victory_album_item" data-img-url="{{v['url']}}" data-youtube-id="no">
+                        <img src="{{v['url']}}" />
+                        <div class="row bottom_band text-center">
+                            {{goal.title}}
+                        </div>
+                    </div>
+                {% elif v["type"] == "vid" %}
+                    <div id="edit_goal_{{loop.index}}" class="item media_modal" data-img-url="http://img.youtube.com/vi/{{v['url']}}/hqdefault.jpg" data-youtube-id="{{v['url']}}">
+                        <img src="http://img.youtube.com/vi/{{v['url']}}/hqdefault.jpg" />
+                        <span class="video_icon"><img src="/static/images/video_triangle.png" width="30px" /></span>
+                        <div class="row bottom_band text-center">
+                            {{goal.title}}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modal %}
+    <div id="mediaModal" class="reveal-modal" data-reveal>
+        <div id="modal_media_container" class="feed_cover_container">
+        </div>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+{% endblock %}

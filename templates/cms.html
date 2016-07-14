@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+  <title>Bucket Vision</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic&Josefin+Slab:300' rel='stylesheet' type='text/css'> -->
+  <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="/static/admin/font/font-awesome/css/font-awesome.min.css">
+
+  <!-- Medium Editor -->
+  <!-- <link rel="stylesheet" href="/static/admin/medium-editor/dist/css/medium-editor.min.css"> -->
+
+  <!-- CSS  -->
+  <link href="/static/admin/stylesheets/materializecms.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/static/admin/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+<header>
+  <ul id="slide-out" class="side-nav">
+    <li><a href="/admin/users">Users</a></li>
+    <!-- <li><a href="/admin/country_explorer">Country Explorer</a></li> -->
+    <li><a href="/admin/country_explorer/countries">Country List</a></li>
+    <li><a href="/admin/country_explorer/goals">All Goals</a></li>
+    <li><a href="/admin/country_explorer/curated">Curated Goals</a></li>
+    <li><a href="/admin/country_explorer/curated/new">New Curated Goal</a></li>
+  </ul>
+  <a id="nav-slide-out-icon" href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="mdi-navigation-menu"></i></a>
+</header>
+<main>
+  <div class="container">
+    <div id="main" class="section scrollspy">
+      <div class="row">
+        <div class="col s12 m12 l12">
+          {% block main %}
+            <h5>Quick links</h5>
+            <div class="row">
+              <div class="col s12">
+                <a href="/admin/country_explorer/curated" class="waves-effect waves-light btn">Curated Goals</a>
+                <a href="/admin/users" class="waves-effect waves-light btn">Users</a>
+              </div>
+            </div>
+
+            <h5>Basic Stats</h5>
+            <div class="row">
+              <div class="card s12 blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title">Users</span>
+                  <p>{{count.users}}</p>
+                </div>
+              </div>
+            </div>
+          {% endblock %}
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</main>
+
+  <footer class="page-footer grey darken-2 text-white">
+    <div class="container center">
+      <!-- <div class="row">
+        <div class="col l12 m12 s12">
+          <div class="white-text">The footer</div>
+        </div>
+      </div> -->
+
+    </div>
+    <div class="footer-copyright">
+      <div class="container center">
+      Bucket Vision
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="/static/admin/js/materialize.min.js"></script>
+  <!--<script src="/static/admin/medium-editor/dist/js/medium-editor.min.js"></script>-->
+  <script src="/static/admin/js/cmsinit.js"></script>
+  <script src="/static/admin/js/ajax.js"></script>
+
+  {% block script %}
+
+  {% endblock %}
+
+  </body>
+</html>

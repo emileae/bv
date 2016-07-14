@@ -1,0 +1,127 @@
+@charset "UTF-8";
+
+// Mixins
+@import "components/prefixer";
+@import "components/mixins";
+@import "components/color";
+
+// Variables;
+@import "components/variables";
+
+// Reset
+@import "components/normalize";
+
+// components
+@import "components/global";
+@import "components/icons-material-design";
+@import "components/grid";
+@import "components/navbar";
+@import "components/roboto";
+@import "components/typography";
+@import "components/cards";
+@import "components/toast";
+@import "components/tabs";
+@import "components/tooltip";
+@import "components/buttons";
+@import "components/dropdown";
+@import "components/waves";
+@import "components/modal";
+@import "components/collapsible";
+@import "components/materialbox";
+@import "components/form";
+@import "components/table_of_contents";
+@import "components/sideNav";
+@import "components/preloader";
+@import "components/slider";
+@import "components/date_picker/default.scss";
+@import "components/date_picker/default.date.scss";
+@import "components/date_picker/default.time.scss";
+
+/* My styles */
+
+/* - keeps footer at bottom of page - */
+/*body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}*/
+
+// ==========================
+// Utility
+// ==========================
+
+#nav-slide-out-icon {
+  font-size: 3rem;
+}
+
+.preview-image {
+  max-height: 200px;
+}
+
+
+.image-gallery-form {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    padding: 2rem;
+    border-radius: 5px;
+    background-color: #ddd;
+}
+
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.confirm {
+  margin-top: 1rem;
+  @include transition(.3s)
+}
+.button-fold-in {
+  max-height: 0rem;
+}
+.button-fold-out {
+  max-height: 5rem;
+}
+
+.transition {
+  @include transition(.3s);
+}
+
+.dropdown-content {
+    max-height: 200px;
+}
+
+#country-filter.dropdown-content {
+    max-height: 500px;
+}
+
+
+
+
+// ==========================
+// Admin Goals
+// ==========================
+.post-form-container {
+  margin-top:2rem;
+}
+.post-form-container.close {
+  max-height: 0rem;
+  overflow: hidden;
+}
+.post-form-container.open {
+  max-height: 29rem;
+  overflow: hidden;
+}
+
+
+
+
+
+
+
+
+

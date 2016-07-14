@@ -1,0 +1,114 @@
+{% extends "base_temp.html" %}
+{% block main %}
+    <div class="row text-center">
+        <h1>Goals</h1>
+        <div id="goal_form_toggle" class="icon-plus goal_form_toggle_on"></div>
+    </div>
+    <div class="row">
+        <div id="goal_add_form_container" class="large-4 medium-4 small-4 large-offset-4 columns transition text-center">
+            <dl class="tabs" data-tab>
+              <dd class="active"><a href="#panel-img_url">Image Url</a></dd>
+              <dd><a href="#panel-img_upload">Upload Image</a></dd>
+            </dl>
+            <div class="tabs-content">
+              <div class="content active" id="panel-img_url">
+                <form id="goal_submit_form" method="post" action="/add_goal">
+                    <input id="goal_img_url" name="goal_img_url" type="text" placeholder="paste image url here." />
+                    <input id="goal_title" name="goal_title" type="text" placeholder="Goal Title" />
+                    <textarea id="goal_description" name="goal_description" placeholder="describe your goal"></textarea>
+                    
+                    <input type="submit" value="Save" class="button" />
+                </form>
+              </div>
+              <div class="content" id="panel-img_upload">
+                <form id="goal_img_upload_form" action="" method="post" enctype="multipart/form-data">
+                    <label>Upload your Goal image (max size 3MB)</label>
+                    <input type="file" id="goal_img" name="goal_img" accept="image/*" />
+                    <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
+                    <!--<input type="hidden" id="goal_id" name="goal_id" value="" />-->
+                    
+                    <input id="goal_title_img_upload" name="goal_title_img_upload" type="text" placeholder="Goal Title" />
+                    <textarea id="goal_description_img_upload" name="goal_description_img_upload" placeholder="describe your goal"></textarea>
+                    
+                    <div id="goal_img_submit" class="button">Save</div>
+                    <!--<input type="submit" value="Upload" class="button tiny" />-->
+                </form>
+
+              </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="goal_container_front" class="large-12 columns">
+            <div id="goal_list">
+                {% for g in goals %}
+                    <div id="goal_{{g.key.id()}}" class="item goal_modal_trigger" data-goal-id="{{g.key.id()}}">
+                            <img src="{{g.image}}" class="goal_card_img" />
+                            <div class="goal_card_text" class="row text-center">
+                                
+                                {% if user_obj %}
+                                    {% if g.user == user_obj.key %}
+                                        <div class="row text-center no_margin goal_card_text_container">
+                                            <div class="goal_card_title">{{g.title}}</div>
+                                            <div class="goal_description">{{g.description}}</div>
+                                            <div class="view_like_container_goal">
+                                                <div class="like_view_btn" data-goal-id="{{g.key.id()}}">
+                                                    <span class="l_v_icon border-right"><i class="li_eye"></i></span> <span id="goal_view_{{g.key.id()}}">{{g.views}}</span>
+                                                </div> 
+                                                <div class="like_view_btn goal_like_btn" data-goal-id="{{g.key.id()}}">
+                                                    <span class="l_v_icon border-right"><i class="li_heart"></i></span> {{g.likes}}
+                                                </div>
+                                            </div>
+                                            <div class="row user_controls hidden">
+                                                <div class="like_view_btn pointer" data-goal-id="{{g.key.id()}}">
+                                                    <i class="li_pen"></i> edit
+                                                </div> 
+                                                <div class="like_view_btn goal_like_btn pointer" data-goal-id="{{g.key.id()}}">
+                                                    <i class="li_trash"></i> delete
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="row user_controls hidden">
+                                            Views <span id="goal_view_{{g.key.id()}}">({{g.views}})</span>
+                                            <span class="button tiny achieved_btn" data-goal-id="{{g.key.id()}}">Achieved</span>
+                                            <span class="button tiny">Edit</span>
+                                            <span class="button tiny">Delete</span>
+                                        </div>-->
+                                        <div class="row bottom_band text-center" data-user-id="{{g.user.get().key.id()}}">
+                                            by you
+                                        </div>
+                                    {% else %}
+                                        <div class="row text-center no_margin goal_card_text_container">
+                                            <div class="goal_card_title">{{g.title}}</div>
+                                            <div class="goal_description">{{g.description}}</div>
+                                            <div class="view_like_container_goal">
+                                                <div class="like_view_btn" data-goal-id="{{g.key.id()}}">
+                                                    <span class="l_v_icon border-right"><i class="li_eye"></i></span> <span id="goal_view_{{g.key.id()}}">{{g.views}}</span>
+                                                </div> 
+                                                <div class="like_view_btn goal_like_btn" data-goal-id="{{g.key.id()}}">
+                                                    <span class="l_v_icon border-right"><i class="li_heart"></i></span> {{g.likes}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row bottom_band text-center user_profile_modal pointer" data-user-id="{{g.user.get().key.id()}}">
+                                            by {{g.user.get().name}}
+                                        </div>
+                                    {% endif %}
+                                    <!--<div class="row bottom_band text-center user_profile_modal" data-user-id="{{g.user.get().key.id()}}">
+                                        by {{g.user.get().name}}
+                                    </div>-->
+                                {% endif %}
+                            </div>
+                        </div>
+                {% endfor %}
+                <!-- !!!!!!!!!!!!!!!!!!!!! {{next}} !!!!!!!!!!!!!!!!!!!!!!!! -->
+                {% if next %}
+                    <div id="next_curs" data-cursor="{{next}}" class="hidden"></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

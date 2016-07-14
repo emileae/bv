@@ -1,0 +1,68 @@
+{% extends "login_temp.html" %}
+
+{% block main %}
+
+<div class="row margin-top-5em margin-bottom-2em">
+    <div id="bv_logo" class="large-4 large-offset-4 columns">
+        <img src="/static/images/Logo.png" />
+    </div>
+</div>
+
+<div class="row">
+    <div id="register_block">
+        <div id="register_header" class="row text-center roboto no_margin">Sign Up</div>
+        <div class="row text-center register_panel no_margin">
+            <form method="post" action="/register" class="no_margin">
+
+                <input type="email" id="email" name="email" placeholder="Email"></input>
+
+                <input type="password" id="password" name="password" placeholder="Password"></input>
+
+                <input type="password" id="verify_password" name="verify_password" placeholder="Confirm Password"></input>
+                
+                <div id="register_checkbox">
+                    <input type="checkbox" id="terms" name="terms" /> I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
+                </div>
+                
+                <input type="submit" value="Sign up" class="black_btn"></input>
+                
+                {% if errors %}
+                    {% if errors["error_verify"] %}
+                        <small class="error">{{errors["error_verify"]}}</small>
+                    {% elif errors["error_email"] %}
+                        <small class="error">{{errors["error_email"]}}</small>
+                    {% elif errors["error_password"] %}
+                        <small class="error">{{errors["error_password"]}}</small>
+                    {% elif errors["error_unique"] %}
+                        <small class="error">{{errors["error_unique"]}}</small>
+                    {% endif %}
+                {% endif %}
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--<div id="bv_description" class="row margin-top-5em">
+    <div id="bv_description_column" class="large-4 large-offset-4 columns text-center">
+        <div id="site_description">
+            <div id="signup_form" class="hidden">
+                <form method="post" action="/register">
+                    <fieldset>
+                        <label>Email</label>
+                        <input type="email" id="email" name="email"></input>
+                        <label>Password</label>
+                        <input type="password" id="password" name="password"></input>
+                        <label>Repeat Password</label>
+                        <input type="password" id="verify_password" name="verify_password"></input>
+                        
+                        <input type="submit" value="Register" class="button"></input>
+                        
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+{% endblock %}

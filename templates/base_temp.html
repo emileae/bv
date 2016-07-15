@@ -4,24 +4,24 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     {% block fb_share %}
     <meta property="og:url" content="http://bucketvision.com"/>
-    <meta property="og:title"           content="Bucket Vision" /> 
+    <meta property="og:title"           content="Bucket Vision" />
     <meta property="og:description" content="Join Bucket Vision, a place to share your Visions and Victories" />
-    <meta property="og:type"            content="bucket_vision:website" /> 
+    <meta property="og:type"            content="bucket_vision:website" />
     <meta property="og:image" content="http://bucketvision.com/static/images/bucketvision_title_white.png"/>
     {% endblock %}
 
     <title>Bucket Vision</title>
-    
+
     <!-- If you are using CSS version, only link these 2 files, you may add app.css to use for your overrides if you like. -->
     <link rel="stylesheet" href="/static/css/normalize.css">
     <link rel="stylesheet" href="/static/foundation/foundation.min.css">
     <link rel="stylesheet" href="/static/css/nprogress.css">
-    
+
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300italic,700italic,700' rel='stylesheet' type='text/css'>
-    
+
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/style-linecons.css">
 
@@ -31,11 +31,11 @@
     <link href='/static/fonts/style_icomoon.css' rel='stylesheet' type='text/css'>
 
     <script src="/static/foundation/custom.modernizr.js"></script>
-    
+
     <style type="text/css">
 
     </style>
-    
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!--<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>-->
     <script src="/static/foundation/foundation.min.js"></script>
@@ -45,12 +45,12 @@
     <script src="/static/js/nprogress.js"></script>
     <!--<script src="/static/js/page_script.js"></script>-->
     <script src="/static/js/page_script_min.js"></script>
-    
+
   </head>
   <body>
-    
-    
-    
+
+
+
     <div id="main_content">
         <!--{ if feed_selected }-->
             <div id="bv_feed_banner">
@@ -73,13 +73,13 @@
               <section class="top-bar-section">
                 <!-- Right Nav Section -->
                 <ul class="center">
+                    <li class="nav_li {% if country_explorer_selected %}nav_selected{% endif %} text-center"><a href="/country_explorer">Country Explorer</a></li>
                     {% if user_obj %}
                     <li class="nav_li {% if explore_selected %}nav_selected{% endif %} text-center"><a href="/">Inspiration</a></li>
                     <li class="nav_li {% if feed_selected %}nav_selected{% endif %} text-center"><a href="/feed">Feed</a></li>
                     <li class="nav_li {% if vision_selected %}nav_selected{% endif %} text-center"><a class="" href="/goals">My Goals</a></li>
                     <li class="nav_li {% if victory_selected %}nav_selected{% endif %} text-center"><a class="" href="/victories">My Victories</a></li>
                     {% else %}
-                    
                     <li class="nav_li {% if explore_selected %}nav_selected{% endif %} text-center"><a href="/">Inspiration</a></li>
                     <li class="nav_li text-center"><a href="/login">Login</a></li>
                     <li class="nav_li text-center"><a href="/register">Register</a></li>
@@ -121,11 +121,11 @@
 
                     </li>
                     {% if user_obj %}
-                    <li id="status_img_container" class="text-center">
+                    <!-- <li id="status_img_container" class="text-center">
                         <a id="status_img" href="#" data-reveal-id="pointsModal">
                             {{user_obj.total_points}}
                         </a>
-                    </li>
+                    </li> -->
                     <li class="has-dropdown">
                         <a id="me_img" href="#" {% if user_obj.profile_img %}style="background-image: url('{{user_obj.profile_img}}')"{% endif %}>
                             <img id="down_arrow_nav" src="/static/images/arrow-down.svg" />
@@ -138,15 +138,30 @@
                     </li>
                     {% endif %}
                 </ul>
-                
+
               </section>
             </nav>
         </div>
-        
+
         {% block goal_page %}
         {% endblock %}
-        
+
         {% block main %}
+
+        {% if countries %}
+        <div id="country-select-container" class="row">
+          <div class="large-12 columns text-center">
+            <a href="#" data-dropdown="drop1" class="button">Pick a Country</a>
+            <ul id="drop1" class="f-dropdown" data-dropdown-content>
+                <li><a href="/country_explorer">All</a></li>
+              {% for country in countries %}
+                <li><a href="/country_explorer?countryCode={{country.countryCode}}">{{country.countryName}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endif %}
+
         <div class="row">
             <div id="goal_container_front" class="large-12 columns">
                 <div id="goal_list" class="page_goals" data-user-id="no">
@@ -160,38 +175,38 @@
             </div>
         </div>
         {% endblock %}
-        
+
     </div>
-    
+
     {% block bottom_band %}
     {% endblock %}
-    
+
     <!-- Modals -->
-    
+
     {% block modal %}
     {% endblock %}
-    
+
     <div id="userModal" class="reveal-modal" data-reveal>
         <div id="user_profile_container">
             <p>Loading</p>
         </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>
-    
+
     <div id="feedModal" class="reveal-modal" data-reveal>
         <div id="goal_profile_container">
             <p>Loading</p>
         </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>
-    
+
     <div id="cardModal" class="reveal-modal" data-reveal>
         <div id="user_profile_container">
             <p>Loading</p>
         </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>
-    
+
     <div id="stealModal" class="reveal-modal" data-reveal>
         <p>Do you want to steal <span id="victim_goal_name"></span>'s goal?</p>
         <form method="post" action="/steal_goal">
@@ -208,7 +223,7 @@
         </form>
       <a class="close-reveal-modal">&#215;</a>
     </div>
-    
+
     <div id="deleteAccountModal" class="reveal-modal" data-reveal>
         <p>Are you sure you want to delete your account?</p>
         <p>You will lose all your goals and victories, you cannot undo this action.</p>
@@ -219,7 +234,7 @@
         <div id="delete_abort" class="black_btn">No</div>
       <a class="close-reveal-modal">&#215;</a>
     </div>
-    
+
     <div id="victoryModal" class="reveal-modal" data-reveal>
         <h2>Congratulations</h2>
         <p class="lead">You've achieved one of your goals</p>
@@ -246,7 +261,7 @@
                         <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
                     {% endif %}
                     <input type="hidden" id="vic_congrats_goal_id" name="goal_id" value="" />
-                    
+
                     <div id="victory_img_submit" class="button tiny">Upload</div>
                 </form>
               </div>
@@ -254,7 +269,7 @@
                 <form id="goal_submit_video_embed_form" method="post" action="/add_vic_vid">
                     <input id="goal_video_embed" name="goal_video_embed" type="text" placeholder="paste youtube video url here." />
                     <input type="hidden" id="vid_goal_id" name="vid_goal_id" value="" />
-                    
+
                     <input type="submit" value="Save" class="button tiny" />
                 </form>
               </div>
@@ -262,7 +277,7 @@
         </div>
         <a class="close-reveal-modal">&#215;</a>
     </div>
-    
+
     <div id="pointsModal" class="reveal-modal" data-reveal>
             <div class="bv_panel no_margin pad_hiw_txt expand">
                 <div class="hiw_title">How to earn points</div>
@@ -279,7 +294,7 @@
             </div>
         <a class="close-reveal-modal">&#215;</a>
     </div>
-    
+
     <!-- FACEBOOK SDK -->
     <div id="fb-root"></div>
     <!--<div id="fb-root"></div>
@@ -291,7 +306,7 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
     </script>-->
-    
+
     <!--<script src="/static/js/jquery.js"></script>-->
     <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
@@ -303,7 +318,7 @@
     <script src="/static/js/page_script.js"></script>-->
     <!--<script src="/static/js/page_script_min.js"></script>-->
     <script src="/static/js/page_script.js"></script>
-    
+
     {% block script %}
     {% endblock %}
 
@@ -326,13 +341,13 @@
             });
         });
     </script>
-    
+
     <script type="text/javascript">
         $(document).foundation();
     </script>
-    
+
     <script type="text/javascript">
     </script>
-    
+
   </body>
 </html>

@@ -63,17 +63,17 @@ curator_email = "bucketvision1@gmail.com"
 
 class MainHandler(webapp2.RequestHandler):
 
-#TEMPLATE FUNCTIONS    
+#TEMPLATE FUNCTIONS
     def write(self, *a, **kw):
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Content-Type'] = 'text/html'
         self.response.out.write(*a, **kw)
-        
+
     def render_str(self, template, **params):
         params['user'] = self.user
         t = jinja_env.get_template(template)
         return t.render(params)
-        
+
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
@@ -83,25 +83,25 @@ class MainHandler(webapp2.RequestHandler):
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
         self.response.out.write(json.dumps(obj))
-   
+
     #COOKIE FUNCTIONS
-    # sets a cookie in the header with name, val , Set-Cookie and the Path---not blog    
+    # sets a cookie in the header with name, val , Set-Cookie and the Path---not blog
     def set_secure_cookie(self, name, val):
         cookie_val = utils.make_secure_val(val)
         self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % (name, cookie_val))# consider imcluding an expire time in cookie(now it closes with browser), see docs
-    # reads the cookie from the request and then checks to see if its true/secure(fits our hmac)    
+    # reads the cookie from the request and then checks to see if its true/secure(fits our hmac)
     def read_secure_cookie(self, name):
         cookie_val = self.request.cookies.get(name)
         if cookie_val:
             cookie_val = urllib.unquote(cookie_val)
         return cookie_val and utils.check_secure_val(cookie_val)
-    
+
     def login(self, user):
         self.set_secure_cookie(cookie_name, str(user.key.id()))
 
     def logout(self):
         self.response.headers.add_header('Set-Cookie', '%s=; Path=/' % cookie_name)
-    
+
     def initialize(self, *a, **kw):
         webapp2.RequestHandler.initialize(self, *a, **kw)
 
@@ -114,7 +114,7 @@ class MainHandler(webapp2.RequestHandler):
         uid = self.read_secure_cookie(cookie_name)
 
         self.user = uid and model.User.by_id(int(uid))
-        
+
 class Register(MainHandler):
     def get(self):
         user_obj = self.user
@@ -127,7 +127,7 @@ class Register(MainHandler):
         password = self.request.get('password')
         verify_password = self.request.get('verify_password')
         key = self.request.get('key')
-        
+
         company_name = self.request.get("company_name")
         company_website = self.request.get("company_website")
         facebook_url = self.request.get("facebook_url")
@@ -137,31 +137,31 @@ class Register(MainHandler):
         city = self.request.get("city")
         street_address = self.request.get("street_address")
         position = self.request.get("position")
-        
+
         error = False
         error_name = ""
         error_password = ""
         error_email = ""
         error_verify = ""
         error_unique = ""
-        
+
         unique_email = model.User.query( model.User.email == email ).get()
         if unique_email:
             error_unique = "There is already a user registered with that email address"
             error = True
-            
+
         if not utils.valid_password(password):
             error_password="Your password needs to be between 3 and 20 characters long"
             error = True
-            
+
         if not utils.valid_email(email):
             error_email="Please type in a valid email address"
             error = True
-            
+
         if password != verify_password:
             error_verify="Please ensure your passwords match"
             error = True
-        
+
         if not error:
             temporary_name = email.split("@")[0]
             pw_hash = utils.make_pw_hash(email, password)
@@ -171,17 +171,17 @@ class Register(MainHandler):
             utils.send_mail(email)
 
             utils.add_count("user")
-            
+
             self.login(user)
             self.redirect('/')
-            
+
         else:
             errors = "error_verify="+error_verify+"&error_email="+error_email+"&error_password="+error_password+"&error_unique="+error_unique
-            
+
             self.redirect("/register?%s" % errors)
 
 
-        
+
 class Login(MainHandler):
     def get(self):
         user_obj = self.user
@@ -199,7 +199,7 @@ class Login(MainHandler):
             }
         else:
             errors = False
-            
+
         self.render("login.html", user_obj=user_obj, error=error, errors=errors)
     def post(self):
         email = self.request.get('email')
@@ -211,7 +211,7 @@ class Login(MainHandler):
             self.redirect('/feed')
         else:
             self.redirect('/login?error=%s' % "Invalid Email / Password")
-        
+
 class Logout(MainHandler):
     def get(self):
         self.logout()
@@ -224,17 +224,17 @@ class BlobUploadUrl(MainHandler):
         #logging.error("!!!!!!!!!!!!!!!!!!!!! made it to backend !!!!!!!!!!!!!!")
         callback_url = self.request.get("callback_url")
         img_type = self.request.get("img_type")
-        
+
         max_size = 1000000
-        
+
         if img_type == "goal" or img_type == "vic_pic":
             max_size = 3000000
         elif img_type == "profile":
             max_size = 600000
-        
+
         if user_obj:
             upload_url = utils.request_blob_url(self, callback_url, max_size)
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             obj = {
@@ -250,7 +250,7 @@ class SaveVideo(MainHandler):
         video_url = self.request.get("video_url")
         video_on_profile = self.request.get("video_on_profile")
         company_id = self.request.get("company_id")
-        
+
         user_obj = self.user
         if user_obj:
             company = model.Company.get_by_id(int(company_id))
@@ -258,7 +258,7 @@ class SaveVideo(MainHandler):
             company.video_url = video_url
             company.video_on_profile = video_on_profile
             company.put()
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -267,17 +267,17 @@ class SaveVideo(MainHandler):
             }
             self.response.out.write(json.dumps(obj))
             #self.redirect("/admin?manage_tab=company")
-            
+
         else:
             self.redirect("/")
-            
 
-        
+
+
 
 
 # ===================================================================================================================================================
 # ===================================================================================================================================================
-        
+
 class HomePage(MainHandler):
     def get(self):
         user_obj = self.user
@@ -294,7 +294,7 @@ class HomePage(MainHandler):
             curs = Cursor(urlsafe=self.request.get('cursor'))
             goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
             #goals, next_curs, more = model.Goal.query().order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
-            
+
             if more and next_curs:
                 next = next_curs.urlsafe()
             else:
@@ -304,12 +304,52 @@ class HomePage(MainHandler):
             self.render("base_temp.html", user_obj=user_obj, goals=goals, explore_selected=explore_selected, next=next, is_admin_user=is_admin_user)
         else:
             self.render("login_temp.html")
-        
+
+class CountryExplorer(MainHandler):
+    def get(self):
+
+        user_obj = self.user
+
+        admin_user = users.get_current_user()
+        is_admin_user = False
+
+        if admin_user:
+            nickname = admin_user.nickname()
+            if users.is_current_user_admin():
+                is_admin_user = True
+
+        countries = model.Country.query().fetch()
+
+        countryCode = self.request.get("countryCode")
+        if countryCode and len(countryCode) == 2:
+            country = utils.get_country(countryCode)
+            logging.error("curated")
+            logging.error(countryCode)
+            curs = Cursor(urlsafe=self.request.get('cursor'))
+            goals, next_curs, more = model.Goal.query(model.Goal.curated==True, model.Goal.country_key==country.key).order(-model.Goal.likes).fetch_page(load_goal_num, start_cursor=curs)
+
+            if more and next_curs:
+                next = next_curs.urlsafe()
+            else:
+                next = False
+        else:
+            logging.error("not curated")
+            curs = Cursor(urlsafe=self.request.get('cursor'))
+            goals, next_curs, more = model.Goal.query(model.Goal.curated==True).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
+
+            if more and next_curs:
+                next = next_curs.urlsafe()
+            else:
+                next = False
+
+        self.render("base_temp.html", user_obj=user_obj, goals=goals, country_explorer_selected=True, next=next, is_admin_user=is_admin_user, countries=countries)
+
+
 class HowItWorks(MainHandler):
     def get(self):
         user_obj = self.user
         self.render('how_it_works.html', user_obj=user_obj)
-        
+
 class PageGoals(MainHandler):
     def get(self):
         user_obj = self.user
@@ -349,9 +389,9 @@ class PageGoals(MainHandler):
                 next = next_curs.urlsafe()
             else:
                 next = False
-            
+
             self.render("ajax_goals.html", goals=goals, next=next, user_obj=user_obj, is_admin_user=is_admin_user)
-            
+
 class PageFeed(MainHandler):
     def get(self):
         user_obj = self.user
@@ -360,7 +400,7 @@ class PageFeed(MainHandler):
             following_list = []
             for f in following:
                 following_list.append(f.followed)
-                
+
             if following_list:
                 curs = Cursor(urlsafe=self.request.get('cursor'))
                 goals, next_curs, more = model.Goal.query(model.Goal.user.IN(following_list)).order(-model.Goal.created).order(model.Goal._key).fetch_page(load_goal_num, start_cursor=curs)
@@ -368,20 +408,20 @@ class PageFeed(MainHandler):
                     next = next_curs.urlsafe()
                 else:
                     next = False
-                
+
             else:
                 goals = []
                 next = False
             self.render("feed_ajax.html", user_obj=user_obj, goals=goals, next=next)
         else:
             self.redirect("/login")
-            
+
 class Settings(MainHandler):
     def get(self):
         user_obj = self.user
         if user_obj:
             self.render('settings.html', user_obj=user_obj)
-            
+
     def post(self):
         user_obj = self.user
         if user_obj:
@@ -390,30 +430,30 @@ class Settings(MainHandler):
             user_obj.name = user_name
             user_obj.description = user_description
             user_obj.put()
-        
+
 class Visions(MainHandler):
     def get(self):
         user_obj = self.user
         if user_obj:
             curs = Cursor(urlsafe=self.request.get('cursor'))
             goals, next_curs, more = model.Goal.query(model.Goal.achieved == False, model.Goal.user == user_obj.key).fetch_page(load_goal_num, start_cursor=curs)
-            
+
             if more and next_curs:
                 next = next_curs.urlsafe()
             else:
                 next = False
-            
+
             self.render("visions.html", user_obj=user_obj, goals=goals, vision_selected=True, next=next)
         else:
             self.redirect('/login')
-            
+
 class Victories(MainHandler):
     def get(self):
         user_obj = self.user
         if user_obj:
             curs = Cursor(urlsafe=self.request.get('cursor'))
             goals, next_curs, more = model.Goal.query(model.Goal.achieved == True, model.Goal.user == user_obj.key).fetch_page(load_goal_num, start_cursor=curs)
-            
+
             if more and next_curs:
                 next = next_curs.urlsafe()
             else:
@@ -422,32 +462,32 @@ class Victories(MainHandler):
             self.render("victories.html", user_obj=user_obj, goals=goals, victory_selected=True, next=next)
         else:
             self.redirect("/login")
-        
+
 class Goals(MainHandler):
     def get(self):
         user_obj = self.user
 
         curs = Cursor(urlsafe=self.request.get('cursor'))
         goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).fetch_page(load_goal_num, start_cursor=curs)
-        
+
         if more and next_curs:
             next = next_curs.urlsafe()
         else:
             next = False
-        
+
         self.render("goals.html", user_obj=user_obj, goals=goals, goal_selected=True, next=next)
-        
+
 class AddGoal(MainHandler):
     def post(self):
         user_obj = self.user
         if user_obj:
-            
+
             goal_img_url = self.request.get("goal_img_url")
             goal_title = self.request.get("goal_title")
             goal_description = self.request.get("goal_description")
-            
+
             already_achieved = self.request.get("already_achieved")
-            
+
             goal = utils.add_goal(user_obj, goal_img_url, goal_title, goal_description)
             if already_achieved == "yes":
                 if user_obj.key == goal.user:
@@ -460,21 +500,21 @@ class AddGoal(MainHandler):
                 self.redirect('/victories')
             else:
                 self.redirect("/goals")
-            
+
 class AddGoalAjax(MainHandler):
     def post(self):
         user_obj = self.user
         if user_obj:
-            
+
             goal_img_url = None
             goal_title = self.request.get("goal_title")
             goal_description = self.request.get("goal_description")
-            
+
             already_achieved = self.request.get("already_achieved")
-            
+
             goal = utils.add_goal(user_obj, goal_img_url, goal_title, goal_description)
             goal_id = goal.key.id()
-            
+
             if already_achieved == "yes":
                 if user_obj.key == goal.user:
                     goal.achieved = True
@@ -483,7 +523,7 @@ class AddGoalAjax(MainHandler):
                     user_obj.total_points += victory_points
                     utils.set_status(user_obj)
                     user_obj.put()
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -500,7 +540,7 @@ class AddView(MainHandler):
             if goal.user != user_obj.key:
                 goal.views += 1;
                 goal.put()
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -508,7 +548,7 @@ class AddView(MainHandler):
                 'views': goal.views
             }
             self.response.out.write(json.dumps(obj))
-        
+
 class AddLike(MainHandler):
     def post(self, goal_id):
         user_obj = self.user
@@ -518,11 +558,11 @@ class AddLike(MainHandler):
             if not liked and goal.user != user_obj.key:
                 goal.likes += 1;
                 goal.put()
-                
+
                 like = model.Like( user = user_obj.key, goal = goal.key )
                 like.put()
-                    
-        
+
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -530,7 +570,7 @@ class AddLike(MainHandler):
             'likes': goal.likes
         }
         self.response.out.write(json.dumps(obj))
-            
+
 class AddVictory(MainHandler):
     def post(self, goal_id):
         user_obj = self.user
@@ -543,7 +583,7 @@ class AddVictory(MainHandler):
                 user_obj.total_points += victory_points
                 utils.set_status(user_obj)
                 user_obj.put()
-                
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -552,29 +592,29 @@ class AddVictory(MainHandler):
                 'goal_id': goal.key.id()
             }
             self.response.out.write(json.dumps(obj))
-            
+
 class AddBoard(MainHandler):
     def post(self):
-        
+
         user_obj = self.user
-        
+
         if user_obj:
             board_type = self.request.get("board_type")
             board_name = self.request.get("board_name")
             board_description = self.request.get("board_description")
-            
+
             utils.add_board(user_obj, board_type, board_name, board_description)
-            
+
 class Feed(MainHandler):
     def get(self):
         user_obj = self.user
-            
+
         if user_obj:
             following = model.Follow.query( model.Follow.following == user_obj.key ).fetch()#user can follow more than 1000 people but it won't be detected
             following_list = []
             for f in following:
                 following_list.append(f.followed)
-                
+
             if following_list:
                 following_list.append(self.user.key)
                 curs = Cursor(urlsafe=self.request.get('cursor'))
@@ -584,32 +624,32 @@ class Feed(MainHandler):
                     next = next_curs.urlsafe()
                 else:
                     next = False
-                
+
             else:
                 goals = []
                 next = False
             self.render("feed.html", user_obj=user_obj, goals=goals, feed_selected=True, next=next)
         else:
             self.redirect("/login")
-            
+
 class GetUserProfile(MainHandler):
     def get(self, user_id):
         user_obj = self.user
         if user_obj:
             user_profile = model.User.get_by_id(int(user_id), parent = model.users_key())
             following = model.Follow.query( model.Follow.following == user_obj.key, model.Follow.followed == user_profile.key ).get()
-            
+
         else:
             user_profile = model.User.get_by_id(int(user_id), parent = model.users_key())
             following = False
-            
+
         already_following = False
         if following:
             already_following = True
-            
+
         last_goal = model.Goal.query(model.Goal.user == user_profile.key, model.Goal.achieved == False).order(-model.Goal.created).get()
         last_victory = model.Goal.query(model.Goal.user == user_profile.key, model.Goal.achieved == True).order(-model.Goal.created).get()
-        
+
         last_3_goals = []
         if not last_goal and not last_victory:
             last_3_goals = model.Goal.query(model.Goal.user == user_profile.key).order(-model.Goal.created).fetch(3)
@@ -617,7 +657,7 @@ class GetUserProfile(MainHandler):
             last_3_goals = False
 
         self.render("user_profile_html.html", user_profile=user_profile, already_following=already_following, last_3_goals=last_3_goals, last_goal=last_goal, last_victory=last_victory, user_obj=user_obj)
-            
+
 class GetGoalProfile(MainHandler):
     def get(self, goal_id):
         user_obj = self.user
@@ -627,12 +667,12 @@ class GetGoalProfile(MainHandler):
         else:
             goal_profile = model.Goal.get_by_id(int(goal_id))
             following = False
-            
+
         already_following = False
         goal_user = goal_profile.user.get()
         if following:
             already_following = True
-            
+
         if goal_profile.achieved:
             vic_media = []
             vic_pics = goal_profile.vic_pics
@@ -651,7 +691,7 @@ class GetGoalProfile(MainHandler):
             vic_media = False
 
         self.render("goal_profile_html.html", user_obj=user_obj, goal_profile=goal_profile, already_following=already_following, vic_media=vic_media, goal_user=goal_user)
-            
+
 class Follow(MainHandler):
     def post(self, user_id):
         user_obj = self.user
@@ -664,7 +704,7 @@ class Follow(MainHandler):
                 logging.error("user-following: %s" %user_obj.key)
                 f = model.Follow( following = user_obj.key, followed = user_key )
                 f.put()
-                
+
                 followed_user.total_followers += 1
                 followed_user.put()
 
@@ -674,7 +714,7 @@ class Follow(MainHandler):
                 else:
                     user_obj.total_following = 1
                     user_obj.put()
-                
+
                 self.response.headers['Content-Type'] = 'application/json'
                 self.response.headers['Host'] = 'localhost'
                 self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -682,7 +722,7 @@ class Follow(MainHandler):
                     'following': 'yes'
                 }
                 self.response.out.write(json.dumps(obj))
-            
+
 class UnFollow(MainHandler):
     def post(self, user_id):
         user_obj = self.user
@@ -692,10 +732,10 @@ class UnFollow(MainHandler):
             following = model.Follow.query( model.Follow.followed == user_key, model.Follow.following == user_obj.key ).get()
             if following:
                 following.key.delete()
-                
+
                 followed_user.total_followers -= 1
                 followed_user.put()
-                
+
                 self.response.headers['Content-Type'] = 'application/json'
                 self.response.headers['Host'] = 'localhost'
                 self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -703,14 +743,14 @@ class UnFollow(MainHandler):
                     'following': 'no'
                 }
                 self.response.out.write(json.dumps(obj))
-            
+
 class UploadProfileImage(blobstore_handlers.BlobstoreUploadHandler):
     def post(self, user_id):
         upload_files = self.get_uploads('user_profile_img')
-        
+
         blob_info = upload_files[0]
         blob_key = blob_info.key()
-        
+
         user_obj = model.User.get_by_id(int(user_id), parent = model.users_key())
 
         # Clean up images
@@ -722,33 +762,33 @@ class UploadProfileImage(blobstore_handlers.BlobstoreUploadHandler):
                 if blb:
                     blb.delete()#delete blob info which deletes blob
                 img_obj.key.delete()
-        
+
         img_type = "profile"
         img_url = utils.save_blob_to_image_obj(blob_key, user_obj, img_type)
-        
+
         if img_url:
             user_obj.profile_img = img_url
             user_obj.put()
             self.redirect('/settings')
         else:
             self.redirect('/settings?error=error')
-            
+
 class UploadGoalImage(blobstore_handlers.BlobstoreUploadHandler):
     def post(self, user_id, goal_id, victory):
         upload_files = self.get_uploads('goal_img')
-        
+
         blob_info = upload_files[0]
         blob_key = blob_info.key()
-        
+
         user_obj = model.User.get_by_id(int(user_id), parent = model.users_key())
-        
+
         goal = model.Goal.get_by_id(int(goal_id))
-        
+
         img_type = "goal"
         img_url = utils.save_blob_to_goal_image_obj(blob_key, user_obj, img_type, goal)
-        
+
         if img_url:
-            
+
             goal.image = img_url
             goal.put()
             if victory == "yes":
@@ -757,67 +797,67 @@ class UploadGoalImage(blobstore_handlers.BlobstoreUploadHandler):
                 self.redirect('/goals')
         else:
             self.redirect('/settings?error=error')
-            
+
 class UploadVictoryImage(blobstore_handlers.BlobstoreUploadHandler):
     def post(self, user_id, goal_id):
         upload_files = self.get_uploads('vic_img')
 
         blob_info = upload_files[0]
         blob_key = blob_info.key()
-        
+
         user_obj = model.User.get_by_id(int(user_id), parent = model.users_key())
-        
+
         img_type = "vic_pic"
         img_url = utils.save_blob_to_image_obj(blob_key, user_obj, img_type)
-        
+
         if img_url:
-            
+
             goal = model.Goal.get_by_id(int(goal_id))
             goal.vic_pics.append(img_url)
             goal.put()
-            
+
             self.redirect('/add_victory_media/%s' % goal_id)
         else:
             self.redirect('/add_victory_media/%s?error=error' % goal_id)
-            
+
 class UploadVicImage(MainHandler):
     def post(self):
         user_obj = self.user
         if user_obj:
             img_url = self.request.get("vic_img_url")
             goal_id = self.request.get("vic_img_url_goal_id")
-            
+
             goal = model.Goal.get_by_id(int(goal_id))
             goal.vic_pics.append(img_url)
             goal.put()
-            
+
             self.redirect('/add_victory_media/%s' % goal_id)
         else:
             self.redirect('/login')
-            
+
 class AddVicVid(MainHandler):
     def post(self):
         user_obj = self.user
         if user_obj:
             goal_video_embed = self.request.get("goal_video_embed")
             goal_id = self.request.get("vid_goal_id")
-            
+
             parsed_vid = utils.youtube_vimeo(goal_video_embed)
             youtube_query = parsed_vid["youtube_query"]
 
             goal = model.Goal.get_by_id(int(goal_id))
             goal.vic_vids.append(youtube_query)
             goal.put()
-            
+
             self.redirect('/add_victory_media/%s' % goal_id)
         else:
             self.redirect('/login')
-            
+
 class VictoryMedia(MainHandler):
     def get(self, goal_id):
         user_obj = self.user
         goal = model.Goal.get_by_id(int(goal_id))
-        
+
         if user_obj and goal:
             if goal.user == user_obj.key:
                 vic_media = []
@@ -836,29 +876,29 @@ class VictoryMedia(MainHandler):
                 self.render("victory_media.html", user_obj=user_obj, goal=goal, vic_media=vic_media)
             else:
                 self.redirect("/victories")
-            
+
 class EditGoal(MainHandler):
     def get(self, goal_id):
         user_obj = self.user
         goal = model.Goal.get_by_id(int(goal_id))
         goal_user = goal.user.get()
-        
+
         if goal and user_obj:
             self.render("edit_goal.html", user_obj=user_obj, goal=goal, goal_user=goal_user)
         else:
             self.redirect('/login')
-            
+
 class ImgPos(MainHandler):
     def post(self):
         user_obj = self.user
         if user_obj:
             top = self.request.get("top")
             goal_id = self.request.get("goal_id")
-            
+
             goal = model.Goal.get_by_id(int(goal_id))
             goal.img_top = top
             goal.put()
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -868,7 +908,7 @@ class ImgPos(MainHandler):
             self.response.out.write(json.dumps(obj))
         else:
             self.redirect("/login")
-            
+
 class EditTitleDescription(MainHandler):
     def post(self):
         user_obj = self.user
@@ -877,11 +917,11 @@ class EditTitleDescription(MainHandler):
             edit_title = self.request.get("edit_title")
             edit_description = self.request.get("edit_description")
             goal_id = self.request.get("goal_id")
-            
+
             goal = model.Goal.get_by_id(int(goal_id))
-            
+
             old_img_url = goal.image
-            
+
             image_stored = model.Image.query( model.Image.serving_url == old_img_url ).get()
             if image_stored:
                 images.delete_serving_url(image_stored.blob_key)#delete serving url
@@ -889,13 +929,13 @@ class EditTitleDescription(MainHandler):
                 if blb:
                     blb.delete()#delete blob info which deletes blob
                 image_stored.key.delete()
-            
+
             goal.image = edit_url
             goal.img_top = "0px"
             goal.title = edit_title
             goal.description = edit_description
             goal.put()
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -908,7 +948,7 @@ class EditTitleDescription(MainHandler):
             self.response.out.write(json.dumps(obj))
         else:
             self.redirect("/login")
-            
+
 class MakeCover(MainHandler):
     def post(self):
         user_obj = self.user
@@ -916,7 +956,7 @@ class MakeCover(MainHandler):
             img_url = self.request.get("img_url")
             goal_id = self.request.get("goal_id")
             goal = model.Goal.get_by_id(int(goal_id))
-            
+
             if goal.achieved:
                 victory_images = goal.vic_pics
                 victory_images.remove(img_url)
@@ -924,7 +964,7 @@ class MakeCover(MainHandler):
                 old_cover = goal.image
                 goal.image = img_url
                 goal.put()
-                
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -935,7 +975,7 @@ class MakeCover(MainHandler):
             self.response.out.write(json.dumps(obj))
         else:
             self.redirect("/login")
-            
+
 class DeleteMedia(MainHandler):
     def post(self):
         user_obj = self.user
@@ -943,19 +983,19 @@ class DeleteMedia(MainHandler):
             img_url = self.request.get("img_url")
             goal_id = self.request.get("goal_id")
             goal = model.Goal.get_by_id(int(goal_id))
-            
+
             vic_pics = goal.vic_pics
             if img_url in vic_pics:
                 vic_pics.remove(img_url)
             vic_vids = goal.vic_vids
             if img_url in vic_vids:
                 vic_vids.remove(img_url)
-            
+
             goal.vic_pics = vic_pics
             goal.vic_vids = vic_vids
-            
+
             goal.put()
-            
+
             uploaded_image = model.Image.query( model.Image.serving_url == img_url ).get()#only for single image
             if uploaded_image:
                 images.delete_serving_url(uploaded_image.blob_key)#delete serving url
@@ -963,7 +1003,7 @@ class DeleteMedia(MainHandler):
                 if blb:
                     blb.delete()#delete blob info which deletes blob
                 uploaded_image.key.delete()
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -973,14 +1013,14 @@ class DeleteMedia(MainHandler):
             self.response.out.write(json.dumps(obj))
         else:
             self.redirect("/login")
-            
+
 class DeleteGoal(MainHandler):
     def post(self):
         user_obj = self.user
         if user_obj:
             goal_id = self.request.get("goal_id")
             goal = model.Goal.get_by_id(int(goal_id))
-            
+
             uploaded_image = model.Image.query( model.Image.goal == goal.key ).get()#only for single image
             if uploaded_image:
                 images.delete_serving_url(uploaded_image.blob_key)#delete serving url
@@ -988,12 +1028,12 @@ class DeleteGoal(MainHandler):
                 if blb:
                     blb.delete()#delete blob info which deletes blob
                 uploaded_image.key.delete()
-            
+
             user_obj.total_goals -= 1;
             user_obj.put()
-            
+
             goal.key.delete()
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -1003,21 +1043,21 @@ class DeleteGoal(MainHandler):
             self.response.out.write(json.dumps(obj))
         else:
             self.redirect("/login")
-            
+
 class StealGoal(MainHandler):
     def post(self):
         user_obj = self.user
         if user_obj:
             goal_id = self.request.get("steal_goal")
-            
+
             goal = model.Goal.get_by_id(int(goal_id))
-            
+
             goal_img_url = goal.image
             goal_title = goal.title
             goal_description = goal.description
-            
+
             new_goal = utils.add_goal(user_obj, goal_img_url, goal_title, goal_description)
-            
+
             self.redirect("/")
 
 class StealVictory(MainHandler):
@@ -1025,34 +1065,34 @@ class StealVictory(MainHandler):
         user_obj = self.user
         if user_obj:
             goal_id = self.request.get("steal_goal")
-            
+
             goal = model.Goal.get_by_id(int(goal_id))
-            
+
             goal_img_url = goal.image
             goal_title = goal.title
             goal_description = goal.description
-            
+
             new_goal = utils.add_victory(user_obj, goal_img_url, goal_title, goal_description)
-            
+
             self.redirect("/")
-            
+
 class GoalPage(MainHandler):
     def get(self, goal_id):
         user_obj = self.user
         goal = model.Goal.get_by_id(int(goal_id))
         #goals = model.Goal.query().fetch(load_goal_num)
         user = goal.user.get()
-        
+
         curs = Cursor(urlsafe=self.request.get('cursor'))
         goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
-        
+
         if more and next_curs:
             next = next_curs.urlsafe()
         else:
             next = False
-        
+
         explore_selected = False
-        
+
         if goal.achieved:
             vic_media = []
             vic_pics = goal.vic_pics
@@ -1069,21 +1109,21 @@ class GoalPage(MainHandler):
                 vic_media.append(vic_media_elem)
         else:
             vic_media = False
-        
+
         self.render("goal_page.html", g=goal, user=user, user_obj=user_obj, goals=goals, next=next, explore_selected=explore_selected, vic_media=vic_media)
-            
+
 class UploadEditImage(blobstore_handlers.BlobstoreUploadHandler):
     def post(self, user_id, goal_id):
         upload_files = self.get_uploads('goal_img')
 
         blob_info = upload_files[0]
         blob_key = blob_info.key()
-        
+
         user_obj = model.User.get_by_id(int(user_id), parent = model.users_key())
         goal = model.Goal.get_by_id(int(goal_id))
-        
+
         old_img_url = goal.image
-        
+
         image_stored = model.Image.query( model.Image.serving_url == old_img_url ).get()
         if image_stored:
             images.delete_serving_url(image_stored.blob_key)#delete serving url
@@ -1091,28 +1131,28 @@ class UploadEditImage(blobstore_handlers.BlobstoreUploadHandler):
             if blb:
                 blb.delete()#delete blob info which deletes blob
             image_stored.key.delete()
-        
+
         img_type = "goal"
         img_url = utils.save_blob_to_image_obj(blob_key, user_obj, img_type)
-        
+
         goal.image = img_url
         goal.img_top = "0px"
         goal.put()
-        
+
         self.redirect('/edit_goal/%s' % goal_id)
-            
+
 class ForgotPassword(MainHandler):
     def post(self):
         email = self.request.get("recovery_email")
-        
+
         user_obj = model.User.by_email(email)
-        
+
         if user_obj:
             message = "your new password has been emailed to %s" % email
             utils.generate_new_password(email)
         else:
             message = "there is no user registered with the email: %s" % email
-            
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -1120,13 +1160,13 @@ class ForgotPassword(MainHandler):
             'message': message,
         }
         self.response.out.write(json.dumps(obj))
-            
+
 class ChangeEmail(MainHandler):
     def post(self):
         password = self.request.get("password")
         old_email = self.request.get("old_email")
         new_email = self.request.get("new_email")
-        
+
         user_obj = self.user
         if user_obj:
             if user_obj.email == old_email:
@@ -1146,7 +1186,7 @@ class ChangeEmail(MainHandler):
                 message = "invalid old email"
         else:
             message = "not logged in"
-            
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -1154,13 +1194,13 @@ class ChangeEmail(MainHandler):
             'message': message,
         }
         self.response.out.write(json.dumps(obj))
-            
+
 class ChangePassword(MainHandler):
     def post(self):
         old_password = self.request.get("old_password")
         new_password = self.request.get("new_password")
         repeat_password = self.request.get("repeat_password")
-        
+
         user_obj = self.user
         if user_obj:
             if new_password == repeat_password:
@@ -1179,7 +1219,7 @@ class ChangePassword(MainHandler):
                 message = "new passwords don't match"
         else:
             message = "not logged in"
-            
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -1187,7 +1227,7 @@ class ChangePassword(MainHandler):
             'message': message,
         }
         self.response.out.write(json.dumps(obj))
-            
+
 class DeleteAccount(MainHandler):
     def post(self):
         user_obj = self.user
@@ -1199,39 +1239,39 @@ class DeleteAccount(MainHandler):
             if blb:
                 blb.delete()#delete blob info which deletes blob
             i.key.delete()
-        
+
         users_following = model.Follow.query(model.Follow.following == user_obj.key).fetch()
         for f in users_following:
             f.key.delete()
-            
+
         users_followed = model.Follow.query(model.Follow.followed == user_obj.key).fetch()
         for ff in users_followed:
             ff.key.delete()
-        
+
         users_likes = model.Like.query(model.Like.user == user_obj.key).fetch()
         for l in users_likes:
             l.key.delete()
-            
+
         user_goals = model.Goal.query(model.Goal.user == user_obj.key).fetch()
         for g in user_goals:
             g.key.delete()
-        
+
         user_obj.key.delete()
-        
+
         self.render("delete_user.html")
-            
+
 class SearchUsers(MainHandler):
     def get(self):
         user_email = self.request.get("user_email")
         users = model.User.query(model.User.email == user_email).fetch(10)
-        
+
         users_list = []
         for u in users:
             users_obj = {}
             users_obj["name"] = u.name
             users_obj["id"] = u.key.id()
             users_list.append(users_obj)
-        
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -1239,75 +1279,75 @@ class SearchUsers(MainHandler):
             'users': users_list
         }
         self.response.out.write(json.dumps(obj))
-        
+
 class UserGoals(MainHandler):
     def get(self, user_id):
         user_obj = self.user
         if user_obj:
             user_profile = model.User.get_by_id(int(user_id), parent = model.users_key())
-            
+
             following = model.Follow.query( model.Follow.following == user_obj.key, model.Follow.followed == user_profile.key ).get()
             already_following = False
             if following:
                 already_following = True
-            
+
             curs = Cursor(urlsafe=self.request.get('cursor'))
             goals, next_curs, more = model.Goal.query(model.Goal.achieved == False, model.Goal.user == user_profile.key).fetch_page(load_goal_num, start_cursor=curs)
-            
+
             if more and next_curs:
                 next = next_curs.urlsafe()
             else:
                 next = False
             explore_selected = True
-            
+
             # for the last goal / victory
             last_goal = model.Goal.query(model.Goal.user == user_profile.key, model.Goal.achieved == False).order(-model.Goal.created).get()
             last_victory = model.Goal.query(model.Goal.user == user_profile.key, model.Goal.achieved == True).order(-model.Goal.created).get()
-            
+
             last_3_goals = []
             if not last_goal and not last_victory:
                 last_3_goals = model.Goal.query(model.Goal.user == user_profile.key).order(-model.Goal.created).fetch(3)
             else:
                 last_3_goals = False
-            
+
             self.render("user_goals.html", user_obj=user_obj, goals=goals, next=next, user_profile=user_profile, already_following=already_following, last_goal=last_goal, last_victory=last_victory, last_3_goals=last_3_goals)
         else:
             self.redirect("/login")
-        
+
 class UserVictories(MainHandler):
     def get(self, user_id):
         user_obj = self.user
         if user_obj:
             user_profile = model.User.get_by_id(int(user_id), parent = model.users_key())
-            
+
             following = model.Follow.query( model.Follow.following == user_obj.key, model.Follow.followed == user_profile.key ).get()
             already_following = False
             if following:
                 already_following = True
-            
+
             curs = Cursor(urlsafe=self.request.get('cursor'))
             goals, next_curs, more = model.Goal.query(model.Goal.achieved == True, model.Goal.user == user_profile.key).fetch_page(load_goal_num, start_cursor=curs)
-            
+
             if more and next_curs:
                 next = next_curs.urlsafe()
             else:
                 next = False
             explore_selected = True
-            
+
             # for the last goal / victory
             last_goal = model.Goal.query(model.Goal.user == user_profile.key, model.Goal.achieved == False).order(-model.Goal.created).get()
             last_victory = model.Goal.query(model.Goal.user == user_profile.key, model.Goal.achieved == True).order(-model.Goal.created).get()
-            
+
             last_3_goals = []
             if not last_goal and not last_victory:
                 last_3_goals = model.Goal.query(model.Goal.user == user_profile.key).order(-model.Goal.created).fetch(3)
             else:
                 last_3_goals = False
-            
+
             self.render("user_victories.html", user_obj=user_obj, goals=goals, next=next, user_profile=user_profile, already_following=already_following, last_goal=last_goal, last_victory=last_victory, last_3_goals=last_3_goals)
         else:
             self.redirect("/login")
-        
+
 class SharePoint(MainHandler):
     def post(self):
         user_obj = self.user
@@ -1316,12 +1356,12 @@ class SharePoint(MainHandler):
             user_obj.put()
         else:
             self.redirect('/login')
-        
+
 class VictoryAlbum(MainHandler):
     def get(self, goal_id):
         user_obj = self.user
         goal = model.Goal.get_by_id(int(goal_id))
-        
+
         if goal:
             vic_media = []
             vic_pics = goal.vic_pics
@@ -1339,7 +1379,7 @@ class VictoryAlbum(MainHandler):
             self.render("victory_album.html", user_obj=user_obj, goal=goal, vic_media=vic_media)
         else:
                 self.redirect("/feed")
-        
+
 class PopulateProfile(MainHandler):
     def get(self):
         users = model.User.query().fetch()
@@ -1347,7 +1387,7 @@ class PopulateProfile(MainHandler):
             if not u.profile_img:
                 u.profile_img = "/static/images/profile.jpg"
                 u.put()
-        
+
 class LeaderBoard(MainHandler):
     def get(self):
         users = model.User.query().order( -model.User.total_points ).fetch(1000)
@@ -1367,7 +1407,7 @@ class APIGoals(MainHandler):
 
         curs = Cursor(urlsafe=self.request.get('cursor'))
         goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(-model.Goal.created).fetch_page(num_items, start_cursor=curs)
-        
+
         if more and next_curs:
             next = next_curs.urlsafe()
         else:
@@ -1463,7 +1503,7 @@ class APIInspirations(MainHandler):
             logging.error(countryCode)
             curs = Cursor(urlsafe=self.request.get('cursor'))
             goals, next_curs, more = model.Goal.query(model.Goal.curated==True, model.Goal.country_key==country.key).order(-model.Goal.likes).fetch_page(load_goal_num, start_cursor=curs)
-            
+
             if more and next_curs:
                 next = next_curs.urlsafe()
             else:
@@ -1472,7 +1512,7 @@ class APIInspirations(MainHandler):
             logging.error("not curated")
             curs = Cursor(urlsafe=self.request.get('cursor'))
             goals, next_curs, more = model.Goal.query().order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
-            
+
             if more and next_curs:
                 next = next_curs.urlsafe()
             else:
@@ -1804,7 +1844,7 @@ class APIRegister(MainHandler):
         password = self.request.get('password')
         verify_password = self.request.get('verify_password')
         key = self.request.get('key')
-        
+
         error = False
         error_name = ""
         error_password = ""
@@ -1819,24 +1859,24 @@ class APIRegister(MainHandler):
         if unique_name:
             error_unique_name = "There is already a user registered with that name"
             error = True
-        
+
         unique_email = model.User.query( model.User.email == email ).get()
         if unique_email:
             error_unique = "There is already a user registered with that email address"
             error = True
-            
+
         if not utils.valid_password(password):
             error_password="Your password needs to be between 3 and 20 characters long"
             error = True
-            
+
         if not utils.valid_email(email):
             error_email="Please type in a valid email address"
             error = True
-            
+
         if password != verify_password:
             error_verify="Please ensure your passwords match"
             error = True
-        
+
         if not error:
             logging.error("NO ERRORS...")
             #temporary_name = email.split("@")[0]
@@ -1847,16 +1887,16 @@ class APIRegister(MainHandler):
             utils.add_count("user")
 
             #utils.send_mail(email)
-            
+
             self.render_json({"message": 'success', "userid": user.key.id(), "long_message": "register"})
-            
+
         else:
             errors = [error_verify, error_email, error_password, error_unique, error_unique_name]
-            
+
             self.render_json({"message": "fail", "errors": errors, "long_message": "register"})
 
 
-        
+
 class APILogin(MainHandler):
     def options(self):
         self.response.headers['Content-Type'] = 'application/json'
@@ -1883,7 +1923,7 @@ class APIUser(MainHandler):
         loggedin_userid = self.request.get("userid")
         logging.error("loggedin_userid")
         logging.error(loggedin_userid)
-        
+
         user_obj = False
         if loggedin_userid:
             user_obj = model.User.get_by_id(int(loggedin_userid), parent = model.users_key())
@@ -1934,7 +1974,7 @@ class APIUser(MainHandler):
 
         self.render_json({
             "message": message,
-            "user_obj": user_json 
+            "user_obj": user_json
             })
 class APIFollowers(MainHandler):
     def get(self, user_id):
@@ -1962,7 +2002,7 @@ class APIFollowers(MainHandler):
 
         self.render_json({
             "followers": follower_list,
-            "next": next 
+            "next": next
             })
 
 class APIFollowing(MainHandler):
@@ -1991,7 +2031,7 @@ class APIFollowing(MainHandler):
 
         self.render_json({
             "following": follower_list,
-            "next": next 
+            "next": next
             })
 
 
@@ -2008,7 +2048,7 @@ class APIFollow(MainHandler):
                 logging.error("user-following: %s" %user_obj.key)
                 f = model.Follow( following = user_obj.key, followed = user_key )
                 f.put()
-                
+
                 followed_user.total_followers += 1
                 followed_user.put()
                 if user_obj.total_following:
@@ -2029,7 +2069,7 @@ class APIFollow(MainHandler):
                 message = ' is following you'
                 note = model.Notification(follow=True, type="follow", message=message, user=notified_user.key, trigger_user=user_obj.key, trigger_user_name=user_obj.name)
                 note.put()
-                
+
                 self.response.headers['Content-Type'] = 'application/json'
                 self.response.headers['Host'] = 'localhost'
                 self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -2042,7 +2082,7 @@ class APIFollow(MainHandler):
             self.render_json({
                 "message": "fail"
                 })
-            
+
 class APIUnFollow(MainHandler):
     def post(self, user_id):
         user_obj_id = self.request.get("user_obj_id")
@@ -2053,14 +2093,14 @@ class APIUnFollow(MainHandler):
             following = model.Follow.query( model.Follow.followed == user_key, model.Follow.following == user_obj.key ).get()
             if following:
                 following.key.delete()
-                
+
                 followed_user.total_followers -= 1
                 followed_user.put()
 
                 if user_obj.total_following > 0:
                     user_obj.total_following -= 1
                     user_obj.put()
-                
+
                 self.response.headers['Content-Type'] = 'application/json'
                 self.response.headers['Host'] = 'localhost'
                 self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -2101,7 +2141,7 @@ class APICloudStorage(MainHandler):
             f = self.request.POST['image']
 
             #if f:
-                # - - - 
+                # - - -
             serving_url = ''#just assign it adn reassign later
 
             if not victory_album_id:
@@ -2175,7 +2215,7 @@ class APIProfileCloudStorage(MainHandler):
             f = self.request.POST['image']
 
             #if f:
-                # - - - 
+                # - - -
             serving_url = ''#just assign it adn reassign later
 
             logging.error("Old profile url")
@@ -2219,7 +2259,7 @@ class APIProfileCloudStorage(MainHandler):
 
 class APIAddVictory(MainHandler):
     def post(self, goal_id):
-        
+
         userid = self.request.get("userid")
 
         user_obj = False
@@ -2237,7 +2277,7 @@ class APIAddVictory(MainHandler):
                 user_obj.put()
             else:
                 new_victory = utils.add_victory(user_obj, goal.image, goal.title, goal.description)
-                
+
             self.render_json({
                 "message": "success",
             })
@@ -2259,9 +2299,9 @@ class APIAddGoal(MainHandler):
             goal_img_url = goal.image
             goal_title = goal.title
             goal_description = goal.description
-            
+
             new_goal = utils.add_goal(user_obj, goal_img_url, goal_title, goal_description)
-                
+
             self.render_json({
                 "message": "success",
             })
@@ -2307,7 +2347,7 @@ class APIGetComment(MainHandler):
 
         self.render_json({
             "comments": comment_list,
-            "next": next    
+            "next": next
         })
 
 class APIAddComment(MainHandler):
@@ -2320,8 +2360,8 @@ class APIAddComment(MainHandler):
         userid = self.request.get("userid")
         goalid = self.request.get("goalid")
         comment = self.request.get("comment")
-        
-        user = model.User.get_by_id(int(userid), parent=model.users_key())            
+
+        user = model.User.get_by_id(int(userid), parent=model.users_key())
 
         goal = model.Goal.get_by_id(int(goalid))
 
@@ -2403,7 +2443,7 @@ class APIAddLike(MainHandler):
                 if not liked:
                     goal.likes += 1;
                     goal.put()
-                    
+
                     like = model.Like( user = user_obj.key, goal = goal.key )
                     like.put()
 
@@ -2418,7 +2458,7 @@ class APIAddLike(MainHandler):
                     message = ' likes your goal '
                     note = model.Notification(like=True, type="like", message=message, user=notified_user.key, goal=goal.key, goal_title=goal.title, trigger_user=user_obj.key, trigger_user_name=user_obj.name)
                     note.put()
-                        
+
 
         obj = {
             'likes': goal.likes
@@ -2448,7 +2488,7 @@ class APIUserNotifications(MainHandler):
 
         curs = Cursor(urlsafe=self.request.get('cursor'))
         notifications, next_curs, more = model.Notification.query(model.Notification.user==user_obj.key).order(-model.Notification.created).fetch_page(num_items, start_cursor=curs)
-        
+
         if more and next_curs:
             next = next_curs.urlsafe()
         else:
@@ -2583,7 +2623,7 @@ class APIDeleteGoal(MainHandler):
         user_obj = model.User.get_by_id(int(userid), parent=model.users_key())
         if user_obj:
             goal = model.Goal.get_by_id(int(goal_id))
-            
+
             # not deleting images in case other users have pinned the images for their own goals
 
             # uploaded_image = model.Image.query( model.Image.goal == goal.key ).get()#only for single image
@@ -2593,7 +2633,7 @@ class APIDeleteGoal(MainHandler):
             #     if blb:
             #         blb.delete()#delete blob info which deletes blob
             #     uploaded_image.key.delete()
-            
+
             # if goal.gcs_filename:
             #     images.delete_serving_url(blobstore.create_gs_key(goal.gcs_filename))
             #     gcs.delete(goal.gcs_filename[3:])
@@ -2611,9 +2651,9 @@ class APIDeleteGoal(MainHandler):
             else:
                 user_obj.total_goals -= 1;
             user_obj.put()
-            
+
             goal.key.delete()
-            
+
             self.response.headers['Content-Type'] = 'application/json'
             self.response.headers['Host'] = 'localhost'
             self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -2627,15 +2667,15 @@ class APIDeleteGoal(MainHandler):
 class APIForgotPassword(MainHandler):
     def post(self):
         email = self.request.get("recovery_email")
-        
+
         user_obj = model.User.by_email(email)
-        
+
         if user_obj:
             message = "your new password has been emailed to %s" % email
             utils.generate_new_password(email)
         else:
             message = "there is no user registered with the email: %s" % email
-            
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -2643,14 +2683,14 @@ class APIForgotPassword(MainHandler):
             'message': message,
         }
         self.response.out.write(json.dumps(obj))
-            
+
 class APIChangeEmail(MainHandler):
     def post(self):
         password = self.request.get("password")
         old_email = self.request.get("old_email")
         new_email = self.request.get("new_email")
         userid = self.request.get("userid")
-        
+
         user_obj = model.User.get_by_id(int(userid), parent=model.users_key())
         user_obj_email = model.User.by_email(old_email)
 
@@ -2676,7 +2716,7 @@ class APIChangeEmail(MainHandler):
                 message = "invalid old email"
         else:
             message = "not logged in"
-            
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -2684,14 +2724,14 @@ class APIChangeEmail(MainHandler):
             'message': message,
         }
         self.response.out.write(json.dumps(obj))
-            
+
 class APIChangePassword(MainHandler):
     def post(self):
         old_password = self.request.get("old_password")
         new_password = self.request.get("new_password")
         repeat_password = self.request.get("repeat_password")
         userid = self.request.get("userid")
-        
+
         user_obj = model.User.get_by_id(int(userid), parent=model.users_key())
 
         if user_obj:
@@ -2711,7 +2751,7 @@ class APIChangePassword(MainHandler):
                 message = "new passwords don't match"
         else:
             message = "not logged in"
-            
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -2724,7 +2764,7 @@ class APIChangeDescription(MainHandler):
     def post(self):
         description = self.request.get("description")
         userid = self.request.get("userid")
-        
+
         user_obj = model.User.get_by_id(int(userid), parent=model.users_key())
 
         if description:
@@ -2732,7 +2772,7 @@ class APIChangeDescription(MainHandler):
             user_obj.put()
 
         message = 'success'
-            
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -2790,7 +2830,7 @@ class AdminDelete(MainHandler):
         goal = model.Goal.get_by_id(int(goal_id))
 
         user_obj = goal.user.get()
-        
+
         uploaded_image = model.Image.query( model.Image.goal == goal.key ).get()#only for single image
         if uploaded_image:
             images.delete_serving_url(uploaded_image.blob_key)#delete serving url
@@ -2798,12 +2838,12 @@ class AdminDelete(MainHandler):
             if blb:
                 blb.delete()#delete blob info which deletes blob
             uploaded_image.key.delete()
-        
+
         user_obj.total_goals -= 1;
         user_obj.put()
-        
+
         goal.key.delete()
-        
+
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Host'] = 'localhost'
         self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -2882,7 +2922,7 @@ class AdminCountryExplorerGoals(MainHandler):
 
         curator_obj = model.User.query(model.User.email == curator_email).get()
         curator_id = curator_obj.key.id()
-        
+
         if more and next_curs:
             next_curs = next_curs.urlsafe()
         else:
@@ -2919,7 +2959,7 @@ class AdminCountryExplorerCurated(MainHandler):
                 next_curs = next_curs.urlsafe()
             else:
                 next_curs = False
-        
+
         countries = utils.countries
 
         curator_obj = model.User.query(model.User.email == curator_email).get()
@@ -2976,15 +3016,15 @@ class AdminCountryExplorerNewCuratedGoal(MainHandler):
             # views = goal.views
 
             # curated_goal = model.Goal(
-            #     origin_user=origin_user, 
-            #     origin_user_id=origin_user_id, 
-            #     origin_goal=origin_goal, 
-            #     origin_goal_id=origin_goal_id, 
-            #     image=image, 
-            #     gcs_filename=gcs_filename, 
-            #     likes=likes, 
-            #     views=views, 
-            #     title=title, 
+            #     origin_user=origin_user,
+            #     origin_user_id=origin_user_id,
+            #     origin_goal=origin_goal,
+            #     origin_goal_id=origin_goal_id,
+            #     image=image,
+            #     gcs_filename=gcs_filename,
+            #     likes=likes,
+            #     views=views,
+            #     title=title,
             #     description=description,
             #     user=user_key,
             #     bv_goal=bv_goal)
@@ -3051,15 +3091,15 @@ class AdminAddCuratedGoal(MainHandler):
                 #goal.put()
 
             # curated_goal = model.CuratedGoal(
-            #     origin_user=origin_user, 
-            #     origin_user_id=origin_user_id, 
-            #     origin_goal=origin_goal, 
-            #     origin_goal_id=origin_goal_id, 
-            #     image=image, 
-            #     gcs_filename=gcs_filename, 
-            #     likes=likes, 
-            #     views=views, 
-            #     title=title, 
+            #     origin_user=origin_user,
+            #     origin_user_id=origin_user_id,
+            #     origin_goal=origin_goal,
+            #     origin_goal_id=origin_goal_id,
+            #     image=image,
+            #     gcs_filename=gcs_filename,
+            #     likes=likes,
+            #     views=views,
+            #     title=title,
             #     description=description,
             #     user=user_key,
             #     bv_goal=bv_goal)
@@ -3172,10 +3212,11 @@ class TaskCuratedFalse(MainHandler):
         goals_to_curate(curs)
 
         #goals, next_curs, more = model.Goal.query().order().fetch_page(load_goal_num, start_cursor=curs)
-        
+
 
 app = webapp2.WSGIApplication([
     ('/', HomePage),
+    ('/country_explorer', CountryExplorer),
     ('/how_it_works', HowItWorks),
     ('/page_goals', PageGoals),
     ('/page_feed_goals', PageFeed),
@@ -3211,12 +3252,12 @@ app = webapp2.WSGIApplication([
     ('/add_victory_media/(\w+)', VictoryMedia),
     ('/get_upload_url', BlobUploadUrl),
     ('/victory_album/(\w+)', VictoryAlbum),
-    
+
     ('/goals/(\w+)', UserGoals),
     ('/victories/(\w+)', UserVictories),
-    
+
     ('/share_point', SharePoint),
-    
+
     ('/login', Login),
     ('/logout', Logout),
     ('/register', Register),
@@ -3243,7 +3284,7 @@ app = webapp2.WSGIApplication([
     ('/admin/country_explorer/curated/new', AdminCountryExplorerNewCuratedGoal),
     ('/admin/country_explorer/add_goal/(\w+)', AdminAddCuratedGoal),
     ('/admin/country_explorer/edit_goal/(\w+)', AdminEditCuratedGoal),
-    
+
     ('/leaderboard', LeaderBoard),
     ('/admin_manage_goals', AdminManageGoals),
     #admin delete button
@@ -3288,13 +3329,3 @@ app = webapp2.WSGIApplication([
     ('/privacy', PrivacyPolicy),
 
 ], debug=False)
-
-
-
-
-
-
-
-
-
-

@@ -1,10 +1,10 @@
 
 
-html { 
+html {
     height: 100%;
     font-family: 'Roboto', sans-serif !important;
 }
-body { 
+body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -24,7 +24,7 @@ p{
 input{
     max-width: 35em !important;
 }
-input:focus{ 
+input:focus{
     background-color: #f1f3f4 !important;
 }
 textarea{
@@ -78,6 +78,11 @@ dl{
     border: 1px solid black;
 }
 .button:hover{
+    background-color: rgb(180, 180, 180);
+    color: rgb(50, 50, 50);
+    border: 1px solid black;
+}
+.button:focus{
     background-color: rgb(180, 180, 180);
     color: rgb(50, 50, 50);
     border: 1px solid black;
@@ -339,7 +344,7 @@ nav li a{
 
 /*
 .reveal-modal{
-    
+
 }
 .reveal-modal img{
     max-height: 75%;
@@ -599,24 +604,45 @@ nav li a{
     background-color: #55acee;
 }
 
+/* =========================================== */
+/* Overrides */
+/* =========================================== */
+
+.top-bar-section li:not(.has-form) a:not(.button) {
+    padding: 0;
+    padding-right: 1rem;
+}
+
+/* =========================================== */
+/* Country explorer page */
+/* =========================================== */
+#country-select-container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+#country-select-container .button {
+  m`rgin-bototm: 0rem;
+}
+
+
 /*================ SHAPES ==================*/
 /*
 .arrow-right {
-	width: 40; 
-	height: 0; 
+	width: 40;
+	height: 0;
 	border-top: 30px solid transparent;
 	border-bottom: 30px solid transparent;
-	
+
 	border-left: 30px solid rgb(54, 52, 53);
 }
 
 .arrow-left {
-	width: 40; 
-	height: 0; 
+	width: 40;
+	height: 0;
 	border-top: 30px solid transparent;
-	border-bottom: 30px solid transparent; 
-	
-	border-right:30px solid rgb(54, 52, 53); 
+	border-bottom: 30px solid transparent;
+
+	border-right:30px solid rgb(54, 52, 53);
 }
 
 .float_left{
@@ -930,7 +956,7 @@ nav li a{
     padding: 0px;
 }
 
-.item { 
+.item {
     width: 385px;
     height: auto;
     background-color: #e7ebed;
@@ -1080,7 +1106,7 @@ nav li a{
     background-repeat: no-repeat;
     background-size: 264px 113px;
     background-position: center;
-    
+
 }
 
 #goal_page_heading{
@@ -1115,7 +1141,12 @@ nav li a{
 #settings_main_forms{
     max-width: 550px;
     margin: auto;
+    text-align: left;
 }
+
+/*#settings_main_forms a{
+    text-align: left;
+}*/
 
 .profile_image_preview{
     display: block !important;
@@ -1305,19 +1336,19 @@ nav li a{
 
 
 .feed_img_1{
-    
+
 }
 .feed_img_2{
-    
+
 }
 .feed_img_3{
-    
+
 }
 .feed_img_4{
-    
+
 }
 .feed_img_5{
-    
+
 }
 
 .feed_profile_card{
@@ -1696,12 +1727,13 @@ nav li a{
 .ss_fb{
     padding: 1px;
     margin: 0 0 0 20px;
+    border-radius:50%;
 }
 .ss_fb svg{
     /*width: 24px;
     height: 24px;
     padding: 1px;*/
-    
+
     width: 26px;
     height: 26px;
     top: 1px;
@@ -1710,6 +1742,7 @@ nav li a{
 .ss_tw{
     padding: 1px 1px 1px 1px;
     margin: 0 0 0 20px;
+    border-radius:50%;
 }
 .ss_tw svg{
     /*width: 23px;
@@ -2009,5 +2042,3 @@ nav li a{
 .vic_media_orbit{
     width: 100%;
 }
-
-

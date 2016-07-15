@@ -1,7 +1,7 @@
 {% extends "base_temp.html" %}
 {% block main %}
     <div class="row feed_row_settings">
-        
+
     <div class="large-2 small-2 columns user_profile_modal feed_profile_card" data-user-id="{{user_obj.key.id()}}">
         <div class="profile_img_container" style="background-image: url('{{user_obj.profile_img}}')">
         </div>
@@ -12,20 +12,20 @@
         <div class="text-center">
             <img class="diamond_line" src="/static/images/diamond.png" />
         </div>
-            
+
             <div class="italic roboto text-center border-bottom pad_10px">
                 {{user_obj.total_followers}} Followers
             </div>
-            
+
             <div class="italic roboto text-center border-bottom pad_10px">
                 {{user_obj.total_goals}} Goals
             </div>
-            
+
             <div class="italic roboto text-center border-bottom pad_10px">
                 {{user_obj.total_victories}} Victories
             </div>
-            
-            
+
+
             <div class="user_profile_text">
                 <div>
                     <div class="score_diamond text-center">
@@ -50,21 +50,21 @@
                     {% else %}
                         background-image: url('/static/images/1_beginner.png')
                     {% endif %}
-                    
+
                     "></div>
                 </div>
             </div>
         <div class="bottom_img_dotted"></div>
     </div>
-        
-        
+
+
         <div class="large-10 small-10 columns text-center">
         <div id="settings_main_forms">
-            
+
             <div class="bv_panel">
-            
-            <h1>Profile Settings</h1>
-            
+
+            <h1>Settings</h1>
+
             <dl class="accordion" data-accordion="myAccordionGroup">
                 <dd>
                     <a href="#panel1c">Name and Description</a>
@@ -146,7 +146,7 @@
                         </form>
                         <div id="search_results" class="hidden">
                             <ul>
-                                
+
                             </ul>
                         </div>
                     </div>

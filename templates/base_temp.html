@@ -44,7 +44,7 @@
     <script src="/static/js/imagesLoaded-min.js"></script>
     <script src="/static/js/nprogress.js"></script>
     <!--<script src="/static/js/page_script.js"></script>-->
-    <script src="/static/js/page_script_min.js"></script>
+    <!-- <script src="/static/js/page_script_min.js"></script> -->
 
   </head>
   <body>
@@ -53,8 +53,14 @@
 
     <div id="main_content">
         <!--{ if feed_selected }-->
-            <div id="bv_feed_banner">
+            <div id="bv_feed_banner" class="{% if not user_obj %}loginPrompt{% endif %}">
                 {% if not user_obj %}
+                  <div class="row">
+                    <div class="column large-12 text-center">
+                      Hey, it looks like you're not signed in to Bucket Vision,
+                      <a href="/signup">Sign up now</a>.
+                    </div>
+                  </div>
                     <!--<a href="/login"><div class="black_btn">Login</div></a>
                     <a href="/signup"><div class="black_btn">Signup</div></a>-->
                 {% endif %}

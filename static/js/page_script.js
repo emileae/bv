@@ -1,4 +1,30 @@
 
+
+/* =============== File input ========================= */
+var inputs = document.querySelectorAll( '.inputfile' );
+Array.prototype.forEach.call( inputs, function( input )
+{
+	var label	 = input.nextElementSibling,
+		labelVal = label.innerHTML,
+    filenameLabel = label.nextElementSibling;
+
+	input.addEventListener( 'change', function( e )
+	{
+		var fileName = '';
+		if( this.files && this.files.length > 1 )
+			fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
+		else
+			fileName = e.target.value.split( '\\' ).pop();
+
+		if( fileName )
+			//label.querySelector( 'span' ).innerHTML = fileName;
+      filenameLabel.innerHTML = fileName;
+		else
+			label.innerHTML = labelVal;
+	});
+});
+
+
 /* =============== MASONRY ========================= */
 
 var window_width = $("#goal_container_front").width();
@@ -16,7 +42,7 @@ $container.imagesLoaded( function() {
       "isFitWidth": true,
       columnWidth: ".item"//function( containerWidth ) {
     });
-    
+
 });
 
 function reload_masonry_container($container){
@@ -28,7 +54,7 @@ function reload_masonry_container($container){
       "isFitWidth": true,
       columnWidth: ".item"//function( containerWidth ) {
     });
-    
+
 });
 };
 
@@ -44,9 +70,9 @@ $(document).on("scroll", function(){
     var document_height = $(document).outerHeight();
     var window_height = $(window).outerHeight();
     var scroll_pos = $(document).scrollTop();
-    
+
     var loading_content = false;
-    
+
     if( (scroll_pos + window_height) > ( document_height * 0.8 ) && !loading_content ){
         loading_content = true;
 
@@ -56,21 +82,27 @@ $(document).on("scroll", function(){
             load_more_feed_goals();
         };
     };
-    
-    if( $("#bv_feed_banner") ){
-        if( $(".sticky").length ){
-            var eTop = $(".sticky").offset().top;
-            var rel_pos = eTop - $(window).scrollTop();
-            if( rel_pos <= 0 ){
-                $("#bv_feed_banner").remove();
-                $(".sticky").css("top", "0px");
-                $(".sticky").addClass("fixed");
-                $(".fixed").removeClass("sticky");
-                $("body").css("margin-top", "47px");
-            }
-        };
+
+		var $bvFeedBanner = $("#bv_feed_banner");
+
+		console.log("!$bvFeedBanner.hasClass('loginPrompt') ", !$bvFeedBanner.hasClass('loginPrompt'));
+
+    if( $bvFeedBanner ){
+	        if( $(".sticky").length ){
+	            var eTop = $(".sticky").offset().top;
+	            var rel_pos = eTop - $(window).scrollTop();
+	            if( rel_pos <= 0 ){
+								if( !$bvFeedBanner.hasClass('loginPrompt') ){
+	                $bvFeedBanner.remove();
+	                $(".sticky").css("top", "0px");
+	                $(".sticky").addClass("fixed");
+	                $(".fixed").removeClass("sticky");
+	                $("body").css("margin-top", "47px");
+								};
+	            };
+	        };
     };
-    
+
 });
 
 $(document).on('close', '#userModal', function () {
@@ -135,13 +167,13 @@ $('body').on('click', '.media_modal', function(){
         youtube_id = false
     };
     $('#mediaModal').foundation('reveal', 'open');
-    
+
     if( youtube_id ){
         $("#modal_media_container").html('<iframe id="vid_iframe" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/'+youtube_id+'?autoplay=1" frameborder="0"/>');
     }else{
         $("#modal_media_container").html("<img class='' src='"+img_url+"' />");
     };
-    
+
 });
 
 $('body').on('click', '.album_icon', function(e){
@@ -192,10 +224,10 @@ $("body").on("click", ".steal_goal", function(e){
     var $this = $(this);
     var goal_id = $this.data("goal-id");
     var victim_name = $this.data("user-name");
-    
+
     $("#victim_goal_name").html(victim_name);
     $("#steal_goal").val(goal_id);
-    
+
     $('#stealModal').foundation('reveal', 'open');
     e.stopPropogation();
 });
@@ -203,10 +235,10 @@ $("body").on("click", ".steal_victory", function(e){
     var $this = $(this);
     var goal_id = $this.data("goal-id");
     var victim_name = $this.data("user-name");
-    
+
     $("#victim_victory_name").html(victim_name);
     $("#steal_victory").val(goal_id);
-    
+
     $('#stealVictoryModal').foundation('reveal', 'open');
     e.stopPropogation();
 });
@@ -313,22 +345,22 @@ function toggle_vision_to_list(){
     var w_w = $(window).width();
     $(".item").css("width", w_w);
     $(".item").addClass("list_view");
-    
+
     $(".goal_card_img").addClass("float_left");
     $(".goal_card_img").css("position", "absolute");
     $(".goal_card_img").css("top", "0px");
     $(".goal_card_img").css("bottom", "0px");
     $(".goal_card_img").css("margin", "auto");
-    
+
     $(".goal_card_text").addClass("float_left");
-    
+
     $(".bottom_band").addClass("hidden");
     $(".achieved_icon_container").addClass("hidden");//achieved_icon_container
     $(".goal_description").addClass("hidden");//goal_description
     $(".view_like_container_goal").addClass("hidden");//view_like_container_goal
     $(".user_controls").addClass("hidden");//user_controls
     $(".goal_card_title").css("margin-left", "80px");
-    
+
     $("#goal_list").addClass("goal_list_listview");
     $(".goal_description").removeClass("overflow_ellipsis");
     $(".view_like_container_goal").addClass("text_left");
@@ -346,22 +378,22 @@ $("body").on("click", ".vision_view_toggle_off", function(){
 function toggle_vision_to_masonry(){
     $(".item").css("width", "385px");
     $(".item").removeClass("list_view");
-    
+
     $(".goal_card_img").removeClass("float_left");
     $(".goal_card_img").css("position", "relative");
     $(".goal_card_img").css("top", "0px");
     $(".goal_card_img").css("bottom", "0px");
     $(".goal_card_img").css("margin", "auto");
-    
+
     $(".goal_card_text").removeClass("float_left");
-    
+
     $(".bottom_band").removeClass("hidden");
     $(".achieved_icon_container").removeClass("hidden");//achieved_icon_container
     $(".goal_description").removeClass("hidden");//goal_description
     $(".view_like_container_goal").removeClass("hidden");//view_like_container_goal
     //$(".user_controls").removeClass("hidden");//user_controls
     $(".goal_card_title").css("margin-left", "0px");
-    
+
     $("#goal_list").removeClass("goal_list_listview");
     $(".goal_description").addClass("overflow_ellipsis");
     $(".view_like_container_goal").removeClass("text_left");
@@ -379,27 +411,27 @@ function toggle_victory_to_list(){
     var w_w = $(window).width();
     $(".item").css("width", w_w);
     $(".item").addClass("list_view");
-    
+
     $(".goal_card_img").addClass("float_left");
     $(".goal_card_img").css("position", "absolute");
     $(".goal_card_img").css("top", "0px");
     $(".goal_card_img").css("bottom", "0px");
     $(".goal_card_img").css("margin", "auto");
-    
+
     $(".goal_card_text").addClass("float_left");
     $(".goal_card_title").css("margin-left", "80px");
-    
+
     $(".bottom_band").addClass("hidden");
     $(".achieved_icon_container").addClass("hidden");//achieved_icon_container
     $(".goal_description").addClass("hidden");//goal_description
     $(".view_like_container_goal").addClass("hidden");//view_like_container_goal
     $(".user_controls").addClass("hidden");//user_controls
-    
+
     $("#goal_list").addClass("goal_list_listview");
     $(".goal_description").removeClass("overflow_ellipsis");
     $(".view_like_container_goal").addClass("text_left");
     $(".goal_description").dotdotdot();
-    
+
     reload_masonry_container($("#goal_list"));
     $( "#victory_view_toggle" ).removeClass("victory_view_toggle_on");
     $( "#victory_view_toggle" ).addClass("victory_view_toggle_off");
@@ -412,21 +444,21 @@ $("body").on("click", ".victory_view_toggle_off", function(){
 function toggle_victory_to_masonry(){
     $(".item").css("width", "385px");
     $(".item").removeClass("list_view");
-    
+
     $(".goal_card_img").removeClass("float_left");
     $(".goal_card_img").css("position", "relative");
     $(".goal_card_img").css("top", "0px");
     $(".goal_card_img").css("bottom", "0px");
     $(".goal_card_img").css("margin", "auto");
-    
+
     $(".goal_card_text").removeClass("float_left");
     $(".goal_card_title").css("margin-left", "0px");
-    
+
     $(".bottom_band").removeClass("hidden");
     $("#goal_list").removeClass("goal_list_listview");
     $(".goal_description").addClass("overflow_ellipsis");
     $(".view_like_container_goal").removeClass("text_left");
-    
+
     reload_masonry_container($("#goal_list"));
     $( "#victory_view_toggle" ).removeClass("victory_view_toggle_off");
     $( "#victory_view_toggle" ).addClass("victory_view_toggle_on");
@@ -442,13 +474,13 @@ $("body").on("click", ".vic_orbit_thumb_pic", function(){
     $iframe.addClass("hidden");
 
     var img_url = $(this).data("img-url");
-    
+
      $(".feed_cover_container").css("background-color", "transparent");
 
     $main_img.attr("src", img_url);
-    
+
     resize_feed_image();
-    
+
 });
 $("body").on("click", ".vic_orbit_thumb_vid", function(){
     var $main_img = $("#modal_goal_profile_img");
@@ -456,27 +488,27 @@ $("body").on("click", ".vic_orbit_thumb_vid", function(){
     //http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com
     $iframe.removeClass("hidden");
     $main_img.addClass("hidden");
-    
+
     $(".feed_cover_container").css("background-image", "none");
     $(".feed_cover_container").css("background-color", "white");
-    
+
     /*var container_width = $(".feed_cover_container").width();
     var iframe_width = $iframe.width();
     var difference = Number(container_width) - Number(iframe_width);
     var margin = difference / 2;
-    
+
     $iframe.css("margin-left", margin+"px");*/
-    
+
     /*var container_height = $(".feed_cover_container").height();
     var iframe_height = $iframe.height();
     var difference_h = Number(container_width) - Number(iframe_width);
     var margin_t = difference_h / 2;
-    
+
     $iframe.css("margin-top", margin_t+"px");*/
-    
+
     $main_img.attr("src", "");
     var video_id = $(this).data("img-url");
-    
+
     $iframe.attr("src", "http://www.youtube.com/embed/"+video_id+"?autoplay=1");
     /*
         http://img.youtube.com/vi/<insert-youtube-video-id-here>/default.jpg
@@ -484,9 +516,9 @@ $("body").on("click", ".vic_orbit_thumb_vid", function(){
         mqdefault.jpg
         sddefault.jpg
         maxresdefault.jpg
-        
+
         http://avexdesigns.com/responsive-youtube-embed/
-        
+
     */
 });
 
@@ -522,11 +554,11 @@ function listen_for_drag_feed_img(){
         $("#image_crop_form").removeClass("hidden");
       }
     });
-    
+
     /*$( ".resizable" ).resizable({
       aspectRatio: true
     });*/
-    
+
 };
 
 /* ================== Jquery UI ======================== */
@@ -559,7 +591,7 @@ $("body").on("submit", "#change_pw_form", function(e){
     var old_password = $("#old_password").val();
     var new_password = $("#new_password").val();
     var repeat_password = $("#repeat_password").val();
-    
+
     change_password(old_password, new_password, repeat_password);
 });
 
@@ -568,7 +600,7 @@ $("body").on("submit", "#change_email_form", function(e){
     var password = $("#password").val();
     var old_email = $("#old_email").val();
     var new_email = $("#new_email").val();
-    
+
     change_email(password, old_email, new_email);
 });
 
@@ -643,13 +675,13 @@ $("body").on("click", "#goal_img_submit", function(){
         }else{
             var victory = "no"
         };
-        
+
         if( $("#edit_goal_id").length > 0 ){
             var edit_goal_id = $("#edit_goal_id").val();
         }else{
             var edit_goal_id = "";
         };
-        
+
         if( edit_goal_id.length ){
             if( check_file_size($("#goal_img"), 3000000) ){
                 $.when(get_upload_url("/upload_goal_edit_img/"+user_id+"/"+edit_goal_id, "goal")).then(function(data){
@@ -840,11 +872,11 @@ function resize_feed_image(){
 };
 
 function orient_feed_img(img_id){
-    
+
     var $this = $("#"+img_id);
 
     var aspect = $this.width() / $this.height();// w/h
-    
+
     if(aspect > 2.18){
         $this.css("width", "100%");
         $this.css("height", "auto");
@@ -870,26 +902,26 @@ function orient_feed_img(img_id){
 
 function submit_vic_img_url_form(img_url, goal_id){
      NProgress.start();
-    
+
     function success(data){
         var img_src = data["img_url"];
-        
+
         var html = '<div class="item"><img src="'+img_src+'" class="goal_card_img" /><div class="goal_card_text" class="row text-center"><span class="button tiny">Make Cover Image</span></div></div>';
-        
+
         $("#goal_list").prepend(html);
-        
+
         $("#panel-img_url").addClass("success");
         var html_array = [];
         html_array.push(html);
-        
+
         $("#goal_list").masonry.layout();
-        
+
         //reload_masonry_container($("#goal_list"));
-        
+
         $("#goal_list").append( html ).masonry( 'appended', html );
          NProgress.done();
     };
-    
+
     $.ajax({
         type: "post",
         url: '/add_vic_img_url',
@@ -903,20 +935,20 @@ function submit_vic_img_url_form(img_url, goal_id){
 
 function delete_goal(goal_id){
      NProgress.start();
-     
+
     function success(data){
         $('#feedModal').foundation('reveal', 'close');
         //alert("goal_"+data["goal_id"]);
         //$("goal_"+data["goal_id"]).remove();
         var goal_id = data["goal_id"];
-        
+
         //$("#goal_"+goal_id).css("display", "none");
-        
+
         $('#goal_list').masonry( 'remove', $("#goal_"+goal_id) );
         $('#goal_list').masonry().layout();
          NProgress.done();
     };
-     
+
     $.ajax({
         type: "post",
         url: '/delete_goal',
@@ -926,19 +958,19 @@ function delete_goal(goal_id){
          NProgress.done();
         alert("error - delete_goal");
     });
-    
+
 };
 
 function make_cover_img(img_url, goal_id, loop_index){
      NProgress.start();
-    
+
     function success(data){
         $(".feed_image").attr("src", data["img_url"]);
         $("#vic_pic_"+loop_index).attr("src", data["old_cover"]);
         $("#make_cover_"+loop_index).data( "img-url", data["old_cover"] );
          NProgress.done();
     };
-    
+
     $.ajax({
         type: "post",
         url: '/make_cover',
@@ -952,13 +984,13 @@ function make_cover_img(img_url, goal_id, loop_index){
 
 function delete_media(img_url, goal_id, loop_index){
      NProgress.start();
-    
+
     function success(data){
         $("#edit_goal_"+loop_index).remove();
         reload_masonry_layout();
         NProgress.done();
     };
-    
+
     $.ajax({
         type: "post",
         url: '/delete_media',
@@ -972,7 +1004,7 @@ function delete_media(img_url, goal_id, loop_index){
 
 function add_goal_ajax(){
     var dfd = new jQuery.Deferred();
-    
+
     var goal_title = $("#goal_title_img_upload").val();
     var goal_description = $("#goal_description_img_upload").val();
     if($("#already_achieved")){
@@ -980,16 +1012,16 @@ function add_goal_ajax(){
     }else{
         var already_achieved = "no";
     };
-    
+
     NProgress.start();
-    
+
     function success(data){
         var goal_id = data["goal_id"];
         //$("#goal_id").val(goal_id);
         NProgress.done();
         dfd.resolve(goal_id);
     };
-    
+
     $.ajax({
         type: "POST",
         url: '/add_goal_ajax',
@@ -1003,9 +1035,9 @@ function add_goal_ajax(){
         NProgress.done();
         dfd.reject(data);
     });
-    
+
     return dfd.promise();
-    
+
 };
 
 function verify_profile_settings(){
@@ -1022,12 +1054,12 @@ function submit_profile_settings(){
      NProgress.start();
     var user_name = $("#user_name").val();
     var user_description = $("#user_description").val();
-    
+
     function success(data){
          NProgress.done();
         $("#profile_settings_form").addClass("success");
     };
-    
+
     $.ajax({
         type: "post",
         url: '/settings',
@@ -1045,7 +1077,7 @@ function submit_title_description_edit(){
     var edit_title = $("#edit_title").val();
     var edit_description = $("#edit_description").val();
     var goal_id = $("#goal_id_td").val();
-    
+
     function success(data){
         //$("#title_description_edit_form_container").addClass("hidden");
         //$("#set_title_description").removeClass("hidden");
@@ -1057,7 +1089,7 @@ function submit_title_description_edit(){
         resize_feed_image();
          NProgress.done();
     };
-    
+
     $.ajax({
         type: "post",
         url: '/edit_title_description',
@@ -1072,14 +1104,14 @@ function submit_title_description_edit(){
 function submit_image_position(){
     var top_pos = $("#top").val();
     var goal_id = $("#goal_id").val();
-    
+
     function success(data){
         $(".feed_image_edit").css("top", data["top"]+"px");
         $("#reposition_instructions").html("Reposition");
         $("#reposition_instructions").removeClass("hidden");
         $("#image_crop_form").addClass("hidden");
     };
-    
+
     $.ajax({
         type: "post",
         url: '/save_img_pos',
@@ -1092,14 +1124,14 @@ function submit_image_position(){
 
 function show_user_profile(id){
      NProgress.start();
-    
+
     function success(data){
          NProgress.done();
         $("#user_profile_container").html(data);
         size_profile_img_container();
         $(".goal_description").dotdotdot();
     };
-    
+
     $.ajax({
         type: "get",
         url: '/get_user_profile/'+id,
@@ -1111,14 +1143,14 @@ function show_user_profile(id){
 };
 function show_goal_profile(id){
      NProgress.start();
-    
+
     function success(data){
          NProgress.done();
         $("#goal_profile_container").html(data);
         size_profile_img_container();
         $(".goal_page_description").dotdotdot();
     };
-    
+
     $.ajax({
         type: "get",
         url: '/get_goal_profile/'+id,
@@ -1137,7 +1169,7 @@ function add_view(id){
     }).fail(function(e){
         alert("error - add_view");
     });
-    
+
     function success(data){
         var views = data["views"];
         $("#goal_view_"+id).html(views+" Views");
@@ -1153,7 +1185,7 @@ function add_like(id){
     }).fail(function(e){
         alert("error - add_like");
     });
-    
+
     function success(data){
         var likes = data["likes"];
         $("#goal_like_"+id).html(likes);
@@ -1170,7 +1202,7 @@ function follow(id){
     }).fail(function(e){
         alert("error - follow");
     });
-    
+
     function success(data){
         if(data['following'] == 'yes'){
             $('.follow_user').addClass('hidden');
@@ -1187,7 +1219,7 @@ function unfollow(id){
     }).fail(function(e){
         alert("error - follow");
     });
-    
+
     function success(data){
         if(data['following'] == 'no'){
             $('.follow_user').removeClass('hidden');
@@ -1206,22 +1238,22 @@ function make_victory(id){
          NProgress.done();
         alert("error - ad_victory");
     });
-    
+
     function success(data){
          NProgress.done();
         //$("#victories_achieved_count_modal").html(data["victories"]+" victories");
         $("#vic_img_url_goal_id").val(data["goal_id"]);
         $("#vic_congrats_goal_id").val(data["goal_id"]);
         $("#vid_goal_id").val(data["goal_id"]);
-        
+
         $('#victoryModal').foundation('reveal', 'open');
     };
 };
 
 function get_upload_url(callback, img_type){
-    
+
     var dfd = new jQuery.Deferred()
-    
+
     $.ajax({
         type: "get",
         data: {"callback_url": callback, "img_type": img_type},
@@ -1231,17 +1263,17 @@ function get_upload_url(callback, img_type){
         alert("FAIL");
         dfd.reject(data);
     });
-    
+
     function success(data){
 
         var upload_url = data["upload_url"];
-        
+
         dfd.resolve(upload_url);
 
     };
-    
+
     return dfd.promise()
-    
+
 };
 
 function check_file_size($file_input, max_size){//max_size in bytes
@@ -1270,7 +1302,7 @@ function youtube_parser(url){
 
 function load_more_goals(e){
     NProgress.start();
-    
+
     function success(data){
             NProgress.done();
             $("#next_curs").remove();
@@ -1289,8 +1321,8 @@ function load_more_goals(e){
             $("#goal_list").removeClass("loading_content");
             ellipsis();
         };
-    
-    
+
+
     if( $("#next_curs").length && !$("#goal_list").hasClass("loading_content") ){
         if( $("#goal_list").hasClass("page_victories") ){
             var victory = "yes";
@@ -1303,9 +1335,9 @@ function load_more_goals(e){
             var goal = "no";
         };
         $("#goal_list").addClass("loading_content");
-        
+
         var for_user = $("#goal_list").data("user-id");
-        
+
         var next_curs = $("#next_curs").data("cursor");
         $.ajax({
             type: "get",
@@ -1323,20 +1355,20 @@ function load_more_goals(e){
 
 function load_more_feed_goals(e){
      NProgress.start();
-    
+
     function success(data){
         NProgress.done();
         $("#next_curs").remove();
         $("#feed_container_column").append(data);
         reload_masonry_layout();
-        
+
         $("#feed_container_column").removeClass("loading_content");
         ellipsis();
         resize_feed_image();
         size_profile_img_container();
     };
-    
-    
+
+
     if( $("#next_curs").length && !$("#feed_container_column").hasClass("loading_content") ){
         $("#feed_container_column").addClass("loading_content");
         var next_curs = $("#next_curs").data("cursor");
@@ -1398,11 +1430,11 @@ function reload_masonry_layout(){
             caption: 'Bucket Vision',
             description: 'Join Bucket Vision, a place to share your Visions and Victories'
         });
-        
+
     });
-    
+
     };
-    
+
   // Load the SDK Asynchronously
   (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
@@ -1413,4 +1445,3 @@ function reload_masonry_layout(){
    }(document, 'script', 'facebook-jssdk'));
 
 /* ============= END FACEBOOK ======================= */
-

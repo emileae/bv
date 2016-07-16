@@ -290,20 +290,20 @@ class HomePage(MainHandler):
             if users.is_current_user_admin():
                 is_admin_user = True
 
-        if user_obj:
-            curs = Cursor(urlsafe=self.request.get('cursor'))
-            goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
-            #goals, next_curs, more = model.Goal.query().order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
+        # if user_obj:
+        curs = Cursor(urlsafe=self.request.get('cursor'))
+        goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
+        #goals, next_curs, more = model.Goal.query().order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
 
-            if more and next_curs:
-                next = next_curs.urlsafe()
-            else:
-                next = False
-
-            explore_selected = True
-            self.render("base_temp.html", user_obj=user_obj, goals=goals, explore_selected=explore_selected, next=next, is_admin_user=is_admin_user)
+        if more and next_curs:
+            next = next_curs.urlsafe()
         else:
-            self.render("login_temp.html")
+            next = False
+
+        explore_selected = True
+        self.render("base_temp.html", user_obj=user_obj, goals=goals, explore_selected=explore_selected, next=next, is_admin_user=is_admin_user)
+        # else:
+        #     self.render("login_temp.html")
 
 class CountryExplorer(MainHandler):
     def get(self):

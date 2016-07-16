@@ -1,6 +1,6 @@
 {% extends "base_temp.html" %}
 {% block main %}
-    
+
     <div class="row">
         <div class="large-12 medium-12 small-12 columns text-center pad_20px">
             <span class="span_h1">My Goals</span>
@@ -22,7 +22,7 @@
                     <input id="goal_img_url" name="goal_img_url" type="text" placeholder="paste image url here." />
                     <input id="goal_title" name="goal_title" type="text" placeholder="Goal Title" />
                     <textarea id="goal_description" name="goal_description" placeholder="describe your goal"></textarea>
-                    
+
                     <input type="submit" value="Save" class="button orange tiny no_margin_left" />
                 </form>
               </div> -->
@@ -30,23 +30,26 @@
                 <form id="goal_img_upload_form" action="" method="post" enctype="multipart/form-data">
                     <label>Upload your Goal image (max size 3MB)</label>
                     <input type="file" id="goal_img" name="goal_img" accept="image/*" />
+                    <!-- <input type="file" name="goal_img" id="file" class="inputfile"  accept="image/*"/>
+                    <label for="file" class="button">Choose an image <span></span></label>
+                    <div></div> -->
                     <input type="hidden" id="user_id" name="user_id" value="{{user_obj.key.id()}}" />
                     <!--<input type="hidden" id="goal_id" name="goal_id" value="" />-->
-                    
+
                     <input id="goal_title_img_upload" name="goal_title_img_upload" type="text" placeholder="Goal Title" />
                     <textarea id="goal_description_img_upload" name="goal_description_img_upload" placeholder="describe your goal"></textarea>
-                    
+
                     <div id="goal_img_submit" class="button orange tiny no_margin_left">Save</div>
                     <!--<input type="submit" value="Upload" class="button tiny" />-->
                 </form>
 
               </div>
-              
+
             <!-- </div> -->
-            
+
         </div>
     </div>
-    
+
     <div class="row">
         <div id="goal_container_front" class="large-12 columns">
             <div id="goal_list" class="page_goals" data-user-id="{{user_obj.key.id()}}">

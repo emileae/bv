@@ -118,10 +118,23 @@ class MainHandler(webapp2.RequestHandler):
 class Register(MainHandler):
     def get(self):
         user_obj = self.user
+
+        error_name = self.request.get("error_name")
+        error_password = self.request.get("error_password")
+        error_email = self.request.get("error_email")
+        error_verify = self.request.get("error_verify")
+        error_unique = self.request.get("error_unique")
+
         if user_obj:
             self.redirect("/")
         else:
-            self.render("register.html", user_obj=user_obj)
+            self.render("register.html",
+            user_obj=user_obj,
+            error_unique=error_unique,
+            error_verify=error_verify,
+            error_email=error_email,
+            error_password=error_password,
+            error_name=error_name)
     def post(self):
         email = self.request.get('email')
         password = self.request.get('password')

@@ -14,30 +14,32 @@
         <div class="row text-center register_panel no_margin">
             <form method="post" action="/register" class="no_margin">
 
-                <input type="email" id="email" name="email" placeholder="Email"></input>
+                <input type="email" id="email" name="email" placeholder="Email" class="{% if error_email %}error{% endif %}"></input>
 
-                <input type="password" id="password" name="password" placeholder="Password"></input>
+                <input type="password" id="password" name="password" placeholder="Password" class="{% if error_email or error_unique %}error{% endif %}"></input>
 
-                <input type="password" id="verify_password" name="verify_password" placeholder="Confirm Password"></input>
-                
-                <div id="register_checkbox">
+                <input type="password" id="verify_password" name="verify_password" placeholder="Confirm Password" class="{% if error_password or error_verify %}error{% endif %}"></input>
+
+                <!-- <div id="register_checkbox">
                     <input type="checkbox" id="terms" name="terms" /> I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
-                </div>
-                
+                </div> -->
+
                 <input type="submit" value="Sign up" class="black_btn"></input>
-                
-                {% if errors %}
-                    {% if errors["error_verify"] %}
-                        <small class="error">{{errors["error_verify"]}}</small>
-                    {% elif errors["error_email"] %}
-                        <small class="error">{{errors["error_email"]}}</small>
-                    {% elif errors["error_password"] %}
-                        <small class="error">{{errors["error_password"]}}</small>
-                    {% elif errors["error_unique"] %}
-                        <small class="error">{{errors["error_unique"]}}</small>
-                    {% endif %}
-                {% endif %}
-                
+
+                <div class="register_login_toggle_link">
+                  <a href="/login">or login</a>
+                </div>
+
+                  {% if error_verify %}
+                      <small class="error">{{error_verify}}</small>
+                  {% elif error_email %}
+                      <small class="error">{{error_email}}</small>
+                  {% elif error_password %}
+                      <small class="error">{{error_password}}</small>
+                  {% elif error_unique %}
+                      <small class="error">{{error_unique}}</small>
+                  {% endif %}
+
             </form>
         </div>
     </div>
@@ -55,9 +57,9 @@
                         <input type="password" id="password" name="password"></input>
                         <label>Repeat Password</label>
                         <input type="password" id="verify_password" name="verify_password"></input>
-                        
+
                         <input type="submit" value="Register" class="button"></input>
-                        
+
                     </fieldset>
                 </form>
             </div>

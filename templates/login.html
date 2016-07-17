@@ -15,23 +15,25 @@
                 <form method="post" action="/login" class="no_margin">
 
                     <input type="email" id="email" name="email" placeholder="Email"></input>
-                    
+
                     <input type="password" id="password" name="password" placeholder="Password"></input>
-                    
+
                     <div id="register_checkbox">
                         <a href="#" data-reveal-id="forgotPasswordModal">Forgot Password?</a>
                     </div>
-                    
+
                     <input type="submit" value="Login" class="black_btn"></input>
-                    
+                    <div class="register_login_toggle_link">
+                      <a href="/register">or register</a>
+                    </div>
+
                     {% if error %}
                         <small class="error">{{error}}</small>
                     {% endif %}
-                    
+
                 </form>
             </div>
         </div>
     </div>
 
 {% endblock %}
-

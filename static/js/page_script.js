@@ -85,7 +85,7 @@ $(document).on("scroll", function(){
 
 		var $bvFeedBanner = $("#bv_feed_banner");
 
-		console.log("!$bvFeedBanner.hasClass('loginPrompt') ", !$bvFeedBanner.hasClass('loginPrompt'));
+		//console.log("!$bvFeedBanner.hasClass('loginPrompt') ", !$bvFeedBanner.hasClass('loginPrompt'));
 
     if( $bvFeedBanner ){
 	        if( $(".sticky").length ){

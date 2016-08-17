@@ -4,7 +4,7 @@ import utils
 
 def users_key(group='default'):
     return ndb.Key('users', group)
-    
+
 class User(ndb.Model):
     name = ndb.StringProperty()
     description = ndb.TextProperty()
@@ -19,12 +19,12 @@ class User(ndb.Model):
     total_following = ndb.IntegerProperty(default=0)#this is newly added
     total_victories = ndb.IntegerProperty(default=0)
     gcs_filename = ndb.StringProperty()
-    profile_img = ndb.StringProperty(default="%s/static/images/profile.jpg" % utils.base_url)
+    profile_img = ndb.StringProperty(default="/static/images/profile.jpg")
     img_top = ndb.StringProperty()
-    
+
     has_comments = ndb.BooleanProperty(default=False)
     comment_count = ndb.IntegerProperty(default=0)
-    
+
     has_mentions = ndb.BooleanProperty(default=False)
     mention_count = ndb.IntegerProperty(default=0)
 
@@ -33,11 +33,11 @@ class User(ndb.Model):
 
     has_notifications = ndb.BooleanProperty(default=False)
     notifications = ndb.IntegerProperty(default=0)
-    
+
     @classmethod
     def by_id(cls, uid):
         return cls.get_by_id(uid, parent = users_key())
-    
+
     @classmethod
     def login(cls, email, pw):
         u = cls.by_email(email)
@@ -45,7 +45,7 @@ class User(ndb.Model):
             email = u.email
         if u and utils.valid_pw(email, pw, u.pw_hash):
             return u
-            
+
     @classmethod
     def fb_login(cls, uid, access_token):
         u = cls.by_fb_uid(uid)
@@ -54,12 +54,12 @@ class User(ndb.Model):
             return u
         #if u and utils.valid_pw(uid, access_token, u.pw_hash):
         #    return u
-            
+
     @classmethod
     def by_email(cls, email):
         u = User.query(User.email == email).get()
         return u
-        
+
     @classmethod
     def by_fb_uid(cls, uid):
         u = User.query(User.fb_uid == uid).get()
@@ -172,16 +172,3 @@ class Notification(ndb.Model):
     goal_title = ndb.StringProperty()
 
     created = ndb.DateTimeProperty(auto_now_add=True)
-
-    
-
-
-
-
-
-
-
-
-
-
-

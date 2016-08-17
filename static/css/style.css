@@ -310,9 +310,10 @@ nav li a{
 }
 #down_arrow_nav{
     position: absolute;
-    right: -30px;
-    padding: 5px;
-    width: 30px;
+    /*right: -30px;*/
+    /*padding: 5px;
+    width: 30px;*/
+    padding-top:5px;
     height: 100%;
 }
 
@@ -328,6 +329,13 @@ nav li a{
 .top-bar-section ul li.profile_dropdown_element>a{
     background-color: white !important;
     color: black !important;
+    text-align:center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.top-bar-section ul#profile_dropdown li>a{
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 .top-bar-section ul li.profile_dropdown_element>a:hover{
     background-color: black !important;
@@ -651,6 +659,34 @@ nav li a{
 }
 #country-select-container .button {
   m`rgin-bototm: 0rem;
+}
+
+.choose-a-country {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  cursor:pointer;
+}
+.country-selection {
+  list-style: none;
+  text-align:center;
+  margin:0rem;
+  max-height: 0rem;
+  overflow: hidden;
+}
+.country-selection.open {
+  list-style: none;
+  text-align:center;
+  max-height: 350rem;
+}
+.country-selection li:first-child {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.country-selection li {
+  padding-bottom: 1rem;
+}
+.country-selection li a {
+  color: #000;
 }
 
 

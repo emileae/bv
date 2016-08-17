@@ -134,7 +134,9 @@
                     </li> -->
                     <li class="has-dropdown">
                         <a id="me_img" href="#" {% if user_obj.profile_img %}style="background-image: url('{{user_obj.profile_img}}')"{% endif %}>
-                            <img id="down_arrow_nav" src="/static/images/arrow-down.svg" />
+                            {% if not user_obj.profile_img %}
+                              <img id="down_arrow_nav" src="/static/images/arrow-down.png" />
+                            {% endif %}
                         </a>
                         <ul id="profile_dropdown" class="dropdown">
                           <li class="profile_dropdown_element border-bottom border-top border-right border-left"><a href="/settings">Settings</a></li>
@@ -155,17 +157,112 @@
         {% block main %}
 
         {% if countries %}
-        <div id="country-select-container" class="row">
-          <div class="large-12 columns text-center">
-            <a href="#" data-dropdown="drop1" class="button">Pick a Country</a>
-            <ul id="drop1" class="f-dropdown" data-dropdown-content>
+        <div class="row">
+          <div class=" column small-12">
+            <div class="choose-a-country text-center">Choose a country</div>
+            <ul class="country-selection transition">
                 <li><a href="/country_explorer">All</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
               {% for country in countries %}
                 <li><a href="/country_explorer?countryCode={{country.countryCode}}">{{country.countryName}}</a></li>
               {% endfor %}
             </ul>
           </div>
         </div>
+        <!-- <div id="country-select-container" class="row">
+          <div class="large-12 columns text-center">
+            <a href="#" data-dropdown="drop1" class="button">Pick a Country</a>
+            <ul id="drop1" class="f-dropdown" data-dropdown-content>
+                <li><a href="/country_explorer">All</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+                <li><a href="/country_explorer">Test</a></li>
+              {% for country in countries %}
+                <li><a href="/country_explorer?countryCode={{country.countryCode}}">{{country.countryName}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div> -->
         {% endif %}
 
         <div class="row">
@@ -328,6 +425,12 @@
     {% block script %}
     {% endblock %}
 
+    <script>
+      $("body").on("click", ".choose-a-country", function(){
+        var $this = $(this);
+        $this.siblings(".country-selection").toggleClass("open");
+      });
+    </script>
     <script type="text/javascript">
         $("body").on("click", ".admin_delete", function(){
             var goal_id = $(this).data("id");

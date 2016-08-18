@@ -648,6 +648,7 @@ nav li a{
 .top-bar-section li:not(.has-form) a:not(.button) {
     padding: 0;
     padding-right: 1rem;
+    padding-left: 1rem;
 }
 
 /* =========================================== */

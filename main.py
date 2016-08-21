@@ -181,7 +181,8 @@ class Register(MainHandler):
             user = model.User(parent=model.users_key(), email=email, pw_hash=pw_hash, name=temporary_name)
             user.put()
 
-            utils.send_mail(email)
+            # disabled confirmation of registration email since Madrill free plan has been discontinued
+            #utils.send_mail(email)
 
             utils.add_count("user")
 

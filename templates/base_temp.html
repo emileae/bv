@@ -69,7 +69,7 @@
                   <div id="login-prompt" class="row">
                     <div class="column large-12 text-center">
                       Hey, it looks like you're not signed in to Bucket Vision,
-                      <a href="/regsiter">Sign up</a> or <a href="/login">Login</a>.
+                      <a href="/register">Sign up</a> or <a href="/login">Login</a>.
                     </div>
                   </div>
                     <!--<a href="/login"><div class="black_btn">Login</div></a>
@@ -170,7 +170,9 @@
         {% if countries %}
         <div class="row">
           <div class=" column small-12">
-            <div class="choose-a-country text-center">Choose a country</div>
+            <div class="choose-a-country text-center">
+              Choose a country <img src="/static/images/chevron-down.svg" />
+            </div>
             <ul class="country-selection transition">
               {% for country in countries %}
                 <li><a href="/country_explorer?countryCode={{country.countryCode}}">{{country.countryName}}</a></li>

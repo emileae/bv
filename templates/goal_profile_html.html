@@ -7,15 +7,15 @@
         <div class="text-center">
             <img class="diamond_line" src="/static/images/diamond.png" />
         </div>
-            
+
             <div class="italic roboto text-center border-bottom pad_10px">
                 {{goal_user.total_followers}} Followers
             </div>
-            
+
             <div class="italic roboto text-center border-bottom pad_10px">
                 {{goal_user.total_goals}} Goals
             </div>
-            
+
             <div class="italic roboto text-center border-bottom pad_10px">
                 {{goal_user.total_victories}} Victories
             </div>
@@ -44,7 +44,7 @@
                     {% else %}
                         background-image: url('/static/images/1_beginner.png')
                     {% endif %}
-                    
+
                     "></div>
                 </div>
             </div>
@@ -54,11 +54,11 @@
         <div class="feed_goal_heading text-center">
             {{goal_profile.title}}
         </div>
-        
+
         <div class="goal_page_description">
             {{goal_profile.description}}
         </div>
-        
+
         <div class="feed_cover_container">
             <!--<img id="modal_goal_profile_img" src="{{goal_profile.image}}" class="feed_image" {% if goal_profile.img_top %}style="top: {{goal_profile.img_top}}px;"{% endif %} />-->
             <img id="modal_goal_profile_img" src="{{goal_profile.image}}" class="feed_image" onload="resize_feed_image()" /><!-- onerror="this.src='/static/images/error_img.jpg'" -->
@@ -73,7 +73,7 @@
                             <span class="l_v_icon border-right">
                                     <img src="/static/images/view.svg" />
                             </span> <span id="goal_view_{{goal_profile.key.id()}}">{{goal_profile.views}} Views</span>
-                        </div> 
+                        </div>
                         <div class="like_view_btn goal_like_btn" data-goal-id="{{goal_profile.key.id()}}">
                             <span class="l_v_icon border-right">
                                 <img src="/static/images/like.svg" />
@@ -94,7 +94,7 @@
                                 </svg>
                             </a>
                         </span>
-                        
+
                         <span class="soc_share tw_blue ss_tw">
                             <a href="http://twitter.com/home?status=Check%20out%20{{goal_user.name}}%20on%20Bucket%20Vision:%20http://bucketvision.com/g/{{goal_profile.key.id()}}" class="share_point soc_share" target="_blank">
                                 <svg version="1.1"
@@ -112,14 +112,16 @@
                             !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
                             </script>
                         </span>
-                        
+
                     {% if user_obj.key == goal_profile.user %}
                         <div id="change_btn" class="blue_btn toggle_on">Edit</div>
                     {% else %}
+                      {% if user_obj %}
                         <div class="steal_goal blue_btn" data-goal-id="{{goal_profile.key.id()}}" data-user-name="{{goal_user.name}}">Steal goal</div>
                         <div class="steal_victory blue_btn" data-goal-id="{{goal_profile.key.id()}}" data-user-name="{{goal_user.name}}">Steal victory</div>
+                      {% endif %}
                     {% endif %}
-                        
+
                 </div>
                 <!--<div class="large-6 medium-6 small-6 columns">
                     <div class="share_btn expand">Share</div>
@@ -132,7 +134,7 @@
                             <a href="#" target="_blank" class="share_point fb_share_btn">
                                 <i class="fi-social-facebook"></i> Share
                             </a>
-                             | 
+                             |
                             <a href="https://twitter.com/share" data-url="http://bucketvision.com/g/{{goal_profile.key.id()}}" data-via="scknss" data-size="large" data-count="none" class="share_point" target="_blank"><i class="fi-social-twitter"></i> Share</a>
                             <script>
                             !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
@@ -158,9 +160,9 @@
                                             </svg>
                                         </span>
                                         <!--<i class="li_pen"></i>--> Edit
-                                    </div> 
+                                    </div>
                                 </a>
-                                
+
                                 <div class="like_view_btn goal_delete" data-goal-id="{{goal_profile.key.id()}}">
                                     <span class="l_v_icon border-right">
                                         <svg version="1.1"
@@ -183,7 +185,7 @@
                                     </span>
                                     <!--<i class="li_trash"></i>--> Delete
                                 </div>
-                                
+
                                 {% if goal_profile.achieved %}
                                     <a href="/add_victory_media/{{goal_profile.key.id()}}">
                                         <div class="like_view_btn">
@@ -191,7 +193,7 @@
                                         </div>
                                     </a>
                                 {% else %}
-                                    <div class="like_view_btn achieved_btn" data-goal-id="{{goal_profile.key.id()}}"> 
+                                    <div class="like_view_btn achieved_btn" data-goal-id="{{goal_profile.key.id()}}">
                                         <span class="l_v_icon border-right">
                                             <svg version="1.1"
                                                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
@@ -211,7 +213,7 @@
                 </div>
             </div>
         </div>
-        
+
         {% if goal_profile.achieved %}
             {% if vic_media %}
                 <div id="orbit_row_goal_page" class="row">
@@ -252,7 +254,7 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <script type="text/javascript">
                     $(document).foundation({
                       orbit: {
@@ -272,10 +274,10 @@
                 </script>
             {% endif %}
         {% endif %}
-        
+
         <div id="fb-root"></div>
         <script type="text/javascript">
-            
+
             var fbAppId = '722137364473621';//'645800148788776';
             window.fbAsyncInit = function() {
                 FB.init({
@@ -287,7 +289,7 @@
                                         // social plugins like login button below
                 });
           };
-          
+
             $("body").on("click", ".fb_share_btn", function(e){
                 e.preventDefault();
                 share_dialog();
@@ -295,13 +297,13 @@
 
           function share_dialog(){
                 //e.preventDefault();
-                
+
                 var img_url = $("#modal_goal_profile_img").attr("src");
-                
+
                 if( img_url.indexOf( "fbcdn" ) > -1 ){
                     var img_url = "http://bucketvision.com/static/images/bucketvision_title_fb.png"
                 };
-                
+
                 FB.ui(
                   {
                     display: 'popup',
@@ -316,8 +318,8 @@
                   }
                 );
           };
-            
-            
+
+
             (function(d, s, id) {
               var js, fjs = d.getElementsByTagName(s)[0];
               if (d.getElementById(id)) return;
@@ -327,9 +329,8 @@
             }(document, 'script', 'facebook-jssdk'));
 
             //alert("fb_loaded");
-            
+
         </script>
-        
+
     </div>
 </div>
-

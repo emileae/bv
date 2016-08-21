@@ -682,23 +682,32 @@ $("body").on("click", "#goal_img_submit", function(){
             var edit_goal_id = "";
         };
 
-        if( edit_goal_id.length ){
-            if( check_file_size($("#goal_img"), 3000000) ){
-                $.when(get_upload_url("/upload_goal_edit_img/"+user_id+"/"+edit_goal_id, "goal")).then(function(data){
-                    $("#goal_img_upload_form").attr("action", data);
-                    $("#goal_img_upload_form").trigger("submit");
-                });
-            };
-        }else{
-            if( check_file_size($("#goal_img"), 3000000) ){
-                $.when( add_goal_ajax() ).then(function(goal_id){
-                    $.when(get_upload_url("/upload_goal_img/"+user_id+"/"+goal_id+"/"+victory, "goal")).then(function(data){
-                        $("#goal_img_upload_form").attr("action", data);
-                        $("#goal_img_upload_form").trigger("submit");
-                    });
-                });
-            }
-        };
+				var $form = $('#goal_img_upload_form');
+
+				if ( !$form.hasClass('disabled') ){
+
+					$form.addClass('disabled');
+
+	        if( edit_goal_id.length ){
+	            if( check_file_size($("#goal_img"), 3000000) ){
+	                $.when(get_upload_url("/upload_goal_edit_img/"+user_id+"/"+edit_goal_id, "goal")).then(function(data){
+	                    $("#goal_img_upload_form").attr("action", data);
+	                    $("#goal_img_upload_form").trigger("submit");
+	                });
+	            };
+	        }else{
+	            if( check_file_size($("#goal_img"), 3000000) ){
+	                $.when( add_goal_ajax() ).then(function(goal_id){
+	                    $.when(get_upload_url("/upload_goal_img/"+user_id+"/"+goal_id+"/"+victory, "goal")).then(function(data){
+	                        $("#goal_img_upload_form").attr("action", data);
+	                        $("#goal_img_upload_form").trigger("submit");
+	                    });
+	                });
+	            }
+	        };
+
+				};// check if form is disabled
+
     };
 });
 

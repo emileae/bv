@@ -1205,6 +1205,7 @@ nav li a{
 #bv_feed_banner #login-prompt {
   position:absolute;
   bottom: 15px;
+  max-width: 100%;
 }
 
 #goal_page_heading{

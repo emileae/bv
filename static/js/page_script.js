@@ -1181,8 +1181,9 @@ function add_view(id){
 
     function success(data){
         var views = data["views"];
-        $("#goal_view_"+id).html(views+" Views");
-        console.log(views)
+				if (views){
+        	$("#goal_view_"+id).html(views+" Views");
+				};
     };
 };
 

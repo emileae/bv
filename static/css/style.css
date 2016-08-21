@@ -654,12 +654,17 @@ nav li a{
 /* =========================================== */
 /* Country explorer page */
 /* =========================================== */
+
+.chevron {
+  height: 1rem;
+}
+
 #country-select-container {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
 #country-select-container .button {
-  m`rgin-bototm: 0rem;
+  margin-bototm: 0rem;
 }
 
 .choose-a-country {

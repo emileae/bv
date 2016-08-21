@@ -171,9 +171,13 @@
         <div class="row">
           <div class=" column small-12">
             <div class="choose-a-country text-center">
-              Choose a country <img src="/static/images/chevron-down.svg" />
+              Choose a country
+              <div class="text-center">
+                <img src="/static/images/chevron-down.svg" class="chevron chevron-down"/>
+                <img src="/static/images/chevron-up.svg" class="chevron chevron-up hidden"/>
+              </div>
             </div>
-            <ul class="country-selection transition">
+            <ul class="country-selection"><!-- transition -->
               {% for country in countries %}
                 <li><a href="/country_explorer?countryCode={{country.countryCode}}">{{country.countryName}}</a></li>
               {% endfor %}
@@ -346,6 +350,7 @@
       $("body").on("click", ".choose-a-country", function(){
         var $this = $(this);
         $this.siblings(".country-selection").toggleClass("open");
+        $this.find(".chevron").toggleClass("hidden");
       });
     </script>
     <script type="text/javascript">

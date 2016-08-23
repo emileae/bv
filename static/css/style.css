@@ -202,7 +202,18 @@ dl{
 }
 
 #title_area{
-    margin-right: 6em;
+    /*margin-right: 6em;*/
+}
+#menu_section {
+  text-align:center;
+}
+#menu_section ul#menu_items {
+  display: inline-block;
+  margin-right:5rem;
+}
+#menu_section ul#menu_items.long-menu {
+  display: inline-block;
+  margin-right:0rem;
 }
 
 nav{

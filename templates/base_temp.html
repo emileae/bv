@@ -87,9 +87,9 @@
                 <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
               </ul>
 
-              <section class="top-bar-section">
+              <section id="menu_section" class="top-bar-section">
                 <!-- Right Nav Section -->
-                <ul class="center">
+                <ul id="menu_items" class="center {% if user_obj %}long-menu{% endif %}">
                     <li class="nav_li {% if country_explorer_selected %}nav_selected{% endif %} text-center"><a href="/country_explorer">Country Explorer</a></li>
                     {% if user_obj %}
                     <li class="nav_li {% if explore_selected %}nav_selected{% endif %} text-center"><a href="/">Inspiration</a></li>
@@ -172,12 +172,15 @@
           <div class=" column small-12">
             <div class="choose-a-country text-center">
               Choose a country
-              <div class="text-center">
+              <img src="/static/images/chevron-down.svg" class="chevron chevron-down"/>
+              <img src="/static/images/chevron-up.svg" class="chevron chevron-up hidden"/>
+              <!-- <div class="text-center">
                 <img src="/static/images/chevron-down.svg" class="chevron chevron-down"/>
                 <img src="/static/images/chevron-up.svg" class="chevron chevron-up hidden"/>
-              </div>
+              </div> -->
             </div>
             <ul class="country-selection"><!-- transition -->
+                <li><a href="/country_explorer">All</a></li>
               {% for country in countries %}
                 <li><a href="/country_explorer?countryCode={{country.countryCode}}">{{country.countryName}}</a></li>
               {% endfor %}
@@ -188,12 +191,15 @@
 
         <div class="row">
             <div id="goal_container_front" class="large-12 columns">
-                <div id="goal_list" class="page_goals" data-user-id="no">
+                <div id="goal_list" class="page_goals {{countryExplorer}}" data-user-id="no">
                     {% for g in goals %}
                         {% include "g_goals.html" %}
                     {% endfor %}
                     {% if next %}
                         <div id="next_curs" data-cursor="{{next}}" class="hidden"></div>
+                    {% endif %}
+                    {% if countryCode %}
+                        <div id="countryCode" data-country-code="{{countryCode}}" class="hidden"></div>
                     {% endif %}
                 </div>
             </div>

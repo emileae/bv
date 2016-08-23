@@ -332,7 +332,7 @@ class CountryExplorer(MainHandler):
             if users.is_current_user_admin():
                 is_admin_user = True
 
-        countries = model.Country.query().fetch()
+        countries = model.Country.query().order(model.Country.countryName).fetch()
 
         countryCode = self.request.get("countryCode")
         if countryCode and len(countryCode) == 2:
@@ -356,7 +356,7 @@ class CountryExplorer(MainHandler):
             else:
                 next = False
 
-        self.render("base_temp.html", user_obj=user_obj, goals=goals, country_explorer_selected=True, next=next, is_admin_user=is_admin_user, countries=countries)
+        self.render("base_temp.html", user_obj=user_obj, goals=goals, country_explorer_selected=True, next=next, is_admin_user=is_admin_user, countries=countries, countryCode=countryCode, countryExplorer="country_explorer")
 
 
 class HowItWorks(MainHandler):
@@ -376,35 +376,47 @@ class PageGoals(MainHandler):
             if users.is_current_user_admin():
                 is_admin_user = True
 
-        if user_obj:
-            victory = self.request.get("victory")
-            goal = self.request.get("goal")
-            for_user = self.request.get("for_user")
+        # if user_obj:
+        victory = self.request.get("victory")
+        goal = self.request.get("goal")
+        for_user = self.request.get("for_user")
+        country_explorer = self.request.get("country_explorer")
 
-            curs = Cursor(urlsafe=self.request.get('cursor'))
-            if for_user != "no":
-                user_profile = model.User.get_by_id(int(for_user), parent = model.users_key())
-                if goal == "yes":
-                    goals, next_curs, more = model.Goal.query(model.Goal.achieved == False, model.Goal.user == user_profile.key).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
-                elif victory == "yes":
-                    goals, next_curs, more = model.Goal.query(model.Goal.achieved == True, model.Goal.user == user_profile.key).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
-                else:
-                    goals, next_curs, more = model.Goal.query(model.Goal.achieved == False, model.Goal.user == user_profile.key).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
+        curs = Cursor(urlsafe=self.request.get('cursor'))
+        if for_user != "no":
+            user_profile = model.User.get_by_id(int(for_user), parent = model.users_key())
+            if goal == "yes":
+                goals, next_curs, more = model.Goal.query(model.Goal.achieved == False, model.Goal.user == user_profile.key).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
+            elif victory == "yes":
+                goals, next_curs, more = model.Goal.query(model.Goal.achieved == True, model.Goal.user == user_profile.key).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
             else:
-                if goal == "yes":
-                    goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
-                elif victory == "yes":
-                    goals, next_curs, more = model.Goal.query(model.Goal.achieved == True).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
+                goals, next_curs, more = model.Goal.query(model.Goal.achieved == False, model.Goal.user == user_profile.key).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
+        else:
+            if goal == "yes" and country_explorer == "no":
+                goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(-model.Goal.created, model.Goal.key).fetch_page(load_goal_num, start_cursor=curs)
+
+            elif country_explorer == "yes":
+                countryCode = self.request.get("countryCode")
+                if countryCode and len(countryCode) == 2:
+                    country = utils.get_country(countryCode)
+                    curs = Cursor(urlsafe=self.request.get('cursor'))
+                    goals, next_curs, more = model.Goal.query(model.Goal.curated==True, model.Goal.country_key==country.key).order(-model.Goal.likes).fetch_page(load_goal_num, start_cursor=curs)
                 else:
-                    goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
-                #goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
+                    curs = Cursor(urlsafe=self.request.get('cursor'))
+                    goals, next_curs, more = model.Goal.query(model.Goal.curated==True).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
 
-            if more and next_curs:
-                next = next_curs.urlsafe()
+            elif victory == "yes":
+                goals, next_curs, more = model.Goal.query(model.Goal.achieved == True).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
             else:
-                next = False
+                goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
+            #goals, next_curs, more = model.Goal.query(model.Goal.achieved == False).order(model.Goal.key).order(-model.Goal.created).fetch_page(load_goal_num, start_cursor=curs)
 
-            self.render("ajax_goals.html", goals=goals, next=next, user_obj=user_obj, is_admin_user=is_admin_user)
+        if more and next_curs:
+            next = next_curs.urlsafe()
+        else:
+            next = False
+
+        self.render("ajax_goals.html", goals=goals, next=next, user_obj=user_obj, is_admin_user=is_admin_user)
 
 class PageFeed(MainHandler):
     def get(self):

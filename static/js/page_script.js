@@ -1334,7 +1334,14 @@ function load_more_goals(e){
 
 
     if( $("#next_curs").length && !$("#goal_list").hasClass("loading_content") ){
-        if( $("#goal_list").hasClass("page_victories") ){
+
+				if( $("#goal_list").hasClass("country_explorer") ){
+						var country_explorer = "yes";
+				}else{
+						var country_explorer = "no";
+				};
+
+				if( $("#goal_list").hasClass("page_victories") ){
             var victory = "yes";
         }else{
             var victory = "no";
@@ -1349,9 +1356,15 @@ function load_more_goals(e){
         var for_user = $("#goal_list").data("user-id");
 
         var next_curs = $("#next_curs").data("cursor");
+
+				var countryCode = '';
+				if ($('#countryCode').length){
+					countryCode = $("#countryCode").data("country-code");
+				};
+
         $.ajax({
             type: "get",
-            data: {"cursor": next_curs, "goal": goal, "victory": victory, "for_user": for_user},
+            data: {"cursor": next_curs, "goal": goal, "victory": victory, "for_user": for_user, "country_explorer": country_explorer, "countryCode":countryCode},
             url: '/page_goals',
             success: success
         }).fail(function(e){
